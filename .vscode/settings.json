@@ -1,0 +1,8 @@
+{
+    "cmake.configureOnOpen": true,
+    "cmake.configureArgs": [
+        "-DTEST=ON"
+    ],
+    "cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/",
+    "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
+}
