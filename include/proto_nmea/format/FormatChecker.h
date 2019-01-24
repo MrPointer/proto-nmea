@@ -1,9 +1,14 @@
+//
+// Copyright (c) 2019 Takpit. All rights reserved.
+//
+
 #ifndef PROTO_NMEA_FORMATCHECKER
 #define PROTO_NMEA_FORMATCHECKER
 
 #include <inttypes.h>
 
-#include "../errors.h"
+#include "../Errors.h"
+#include "ProtocolFormat.h"
 
 #ifdef __cplusplus
 extern "C"

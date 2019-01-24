@@ -1,6 +1,10 @@
+//
+// Copyright (c) 2019 Takpit. All rights reserved.
+//
+
 #include <catch/catch.hpp>
 
-#include <proto_nmea/format_checker/formatChecker.h>
+#include <proto_nmea/format/FormatChecker.h>
 
 SCENARIO("Invalid chars are handled as errors")
 {
@@ -15,7 +19,7 @@ SCENARIO("Invalid chars are handled as errors")
 
             THEN("Invalid Start-Char error returned")
             {
-                REQUIRE(errorCode == -EINVAL_NMEA_MESSAGE_START);
+                REQUIRE(errorCode == -EINVAL_PROTO_START);
             }
         }
     }

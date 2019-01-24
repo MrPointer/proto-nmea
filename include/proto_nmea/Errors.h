@@ -3,7 +3,7 @@
 
 enum parser_errors
 {
-    EINVAL_NMEA_MESSAGE_START = 30
+    EINVAL_PROTO_START = 30
 };
 
 #endif
