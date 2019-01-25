@@ -8,10 +8,16 @@ int8_t validateMessageFormat(const char *rawMessage)
 {
     size_t messageLength;
 
+    // Validate message beginning fits protocol
     if (*rawMessage != PROTOCOL_START_CHAR)
-        return -EINVALID_PROTOCOL_START;
+        return -EINVALID_PROTOCOL_BEGINNING;
 
     messageLength = strlen(rawMessage); // Figure out the length of the message
+
+    // Validate message ending fits protocol
+    if (rawMessage[messageLength - 2] != PROTOCOL_STOP_CHAR_1 ||
+        rawMessage[messageLength - 1] != PROTOCOL_STOP_CHAR_2)
+        return -EINVALID_PROTOCOL_ENDING;
 
     for (int i = 1; i < messageLength; ++i)
     {
