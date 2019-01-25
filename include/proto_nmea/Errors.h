@@ -3,7 +3,8 @@
 
 enum parser_errors
 {
-    EINVAL_PROTO_START = 30
+    EINVALID_PROTOCOL_START = 30,
+    EMISPLACED_DELIMITER
 };
 
 #endif

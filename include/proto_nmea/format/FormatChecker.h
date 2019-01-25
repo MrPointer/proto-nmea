@@ -6,6 +6,7 @@
 #define PROTO_NMEA_FORMATCHECKER
 
 #include <inttypes.h>
+#include <string.h>
 
 #include "../Errors.h"
 #include "ProtocolFormat.h"
