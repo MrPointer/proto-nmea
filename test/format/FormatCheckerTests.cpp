@@ -16,6 +16,22 @@
 
 #include <proto_nmea/format/FormatChecker.h>
 
+SCENARIO("Null message is validated and considered general error")
+{
+    GIVEN("Null message")
+    {
+        std::string nullMessage{};
+        WHEN("Message format is validated")
+        {
+            int8_t errorCode = validateMessageFormat(nullMessage.c_str());
+            THEN("General error message is returned")
+            {
+                REQUIRE(errorCode == -ENULL_STRING);
+            }
+        }
+    }
+}
+
 SCENARIO("Invalid protocol start chars are validated and considered errors")
 {
     GIVEN("Invalid protocol start char")

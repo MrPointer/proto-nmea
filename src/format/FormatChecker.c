@@ -8,6 +8,9 @@ int8_t validateMessageFormat(const char *rawMessage)
 {
     size_t messageLength;
 
+    if (rawMessage == NULL || *rawMessage == '\0')
+        return -ENULL_STRING;
+
     // Validate message beginning fits protocol
     if (*rawMessage != PROTOCOL_START_CHAR)
         return -EINVALID_PROTOCOL_BEGINNING;
