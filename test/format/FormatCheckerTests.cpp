@@ -2,7 +2,16 @@
 // Copyright (c) 2019 Takpit. All rights reserved.
 //
 
-#include <catch/catch.hpp>
+//region Catch include
+#ifdef CATCH_SYSTEM_PACKAGE
+
+#include <catch2/catch.hpp>
+
+#else
+#include <catch.hpp>
+#endif
+//endregion
+
 #include <iostream>
 
 #include <proto_nmea/format/FormatChecker.h>
