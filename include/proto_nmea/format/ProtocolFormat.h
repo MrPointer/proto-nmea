@@ -27,6 +27,9 @@ extern "C"
 
 #define CHECKSUM_LENGTH 2
 
+#define MESSAGE_MIN_LENGTH 10
+#define MESSAGE_MAX_LENGTH 90
+
 #ifdef __cplusplus
 }
 #endif

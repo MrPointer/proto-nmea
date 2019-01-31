@@ -22,6 +22,11 @@ int8_t validateMessageFormat(const char *rawMessage)
         rawMessage[messageLength - 1] != PROTOCOL_STOP_CHAR_2)
         return -EINVALID_PROTOCOL_ENDING;
 
+    if (messageLength < MESSAGE_MIN_LENGTH)
+        return -ESHORT_MESSAGE;
+    else if (messageLength > MESSAGE_MAX_LENGTH)
+        return -ELONG_MESSAGE;
+
     for (int i = 1; i < messageLength; ++i)
     {
         if (i == PROTOCOL_DATA_START_INDEX)
