@@ -23,8 +23,13 @@ int8_t validateMessageFormat(const char *rawMessage)
         rawMessage[messageLength - 1] != PROTOCOL_STOP_CHAR_2)
         return -EINVALID_PROTOCOL_ENDING;
 
-    if (messageLength < MESSAGE_MIN_LENGTH)
-        return -ESHORT_MESSAGE;
+    if (messageLength <= MESSAGE_MIN_LENGTH)
+    {
+        if (messageLength < MESSAGE_MIN_LENGTH)
+            return -ESHORT_MESSAGE;
+        else
+            return -EMISSING_MESSAGE_DATA;
+    }
     else if (messageLength > MESSAGE_MAX_LENGTH)
         return -ELONG_MESSAGE;
 
@@ -42,7 +47,7 @@ int8_t validateMessageFormat(const char *rawMessage)
     if (!isdigit(rawMessage[checkSumIdealIndex + 1]) || !isdigit(rawMessage[checkSumIdealIndex + 2]))
         return -EINVALID_CHECKSUM;*/
 
-    for (int i = PROTOCOL_DATA_START_INDEX; i <= MESSAGE_TYPE_MIN_LENGTH; ++i)
+    for (int i = MESSAGE_TYPE_START_INDEX; i <= MESSAGE_TYPE_START_INDEX + MESSAGE_TYPE_MIN_LENGTH; ++i)
     {
         if (!isalpha(rawMessage[i])) // Each char representing message type must be an alpha
             return -EINVALID_MESSAGE_TYPE;

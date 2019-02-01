@@ -197,7 +197,6 @@ SCENARIO("Invalid message types are reported as errors")
 SCENARIO("Invalid checksum data reported as error")
 {
     std::string messageEndChars;
-
     messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
 
     GIVEN("Valid checksum position without checksum data")
@@ -211,13 +210,13 @@ SCENARIO("Invalid checksum data reported as error")
         WHEN("Message is validated")
         {
             int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
-
             THEN("Missing Checksum Data error is returned")
             {
                 REQUIRE(errorCode == -EMISSING_CHECKSUM_DATA);
             }
         }
     }
+
     GIVEN("Valid checksum format, non-matching data")
     {
         std::string nmeaMessage{PROTOCOL_START_CHAR};
@@ -255,6 +254,7 @@ SCENARIO("Data-less messages are reported as errors")
         WHEN("Message is validated")
         {
             int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+
             THEN("Missing Checksum Data error is returned")
             {
                 REQUIRE(errorCode == -EMISSING_MESSAGE_DATA);
@@ -289,7 +289,3 @@ SCENARIO("Valid messages are reported as valid")
             THEN("Valid format is returned")
             {
                 REQUIRE(errorCode == -EVALID);
-            }
-        }
-    }
-}
