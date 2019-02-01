@@ -6,7 +6,7 @@ set(C_STANDARD 11)
 set(CXX_STANDARD 14)
 
 add_executable(proto-nmea-tests test_main.cpp
-        format/FormatCheckerTests.cpp)
+        format/FormatCheckerTests.cpp utility/TypeConversionUtils.cpp utility/TypeConversionUtils.hpp)
 
 target_include_directories(proto-nmea-tests PRIVATE dependencies ../include)
 target_link_libraries(proto-nmea-tests PRIVATE proto-nmea-lib)

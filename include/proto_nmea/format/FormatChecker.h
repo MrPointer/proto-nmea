@@ -6,8 +6,10 @@
 #define PROTO_NMEA_FORMATCHECKER
 
 #include <inttypes.h>
+#include <ctype.h>
 #include <string.h>
 
+#include "../utility/ChecksumUtils.h"
 #include "../Errors.h"
 #include "ProtocolFormat.h"
 

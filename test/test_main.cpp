@@ -1,11 +1,4 @@
 #define CATCH_CONFIG_MAIN
+#define CATCH_CONFIG_FAST_COMPILE
 
-//region Catch include
-#ifdef CATCH_SYSTEM_PACKAGE
-
-#include <catch2/catch.hpp>
-
-#else
-#include <catch.hpp>
-#endif
-//endregion
+#include "CatchSmartInclude.hpp"

@@ -7,6 +7,7 @@
 int8_t validateMessageFormat(const char *rawMessage)
 {
     size_t messageLength;
+    char receivedChecksum[3] = {0};
 
     if (rawMessage == NULL || *rawMessage == '\0')
         return -ENULL_STRING;
@@ -27,19 +28,51 @@ int8_t validateMessageFormat(const char *rawMessage)
     else if (messageLength > MESSAGE_MAX_LENGTH)
         return -ELONG_MESSAGE;
 
+    // Validate checksum
+    size_t checkSumIdealIndex = messageLength - PROTOCOL_STOP_LENGTH - CHECKSUM_FULL_LENGTH;
+    // Should start with a checksum delimiter
+    if (rawMessage[checkSumIdealIndex] != PROTOCOL_CHECKSUM_DELIMITER)
+    {
+        if (strchr(rawMessage + checkSumIdealIndex, PROTOCOL_CHECKSUM_DELIMITER))
+            return -EMISSING_CHECKSUM_DATA;
+        else
+            return -EMISSING_CHECKSUM;
+    }
+    /*// Should be followed by 2 integers representing the checksum
+    if (!isdigit(rawMessage[checkSumIdealIndex + 1]) || !isdigit(rawMessage[checkSumIdealIndex + 2]))
+        return -EINVALID_CHECKSUM;*/
+
     for (int i = 1; i < messageLength; ++i)
     {
         if (i == PROTOCOL_DATA_START_INDEX)
         {
             if (rawMessage[i] == PROTOCOL_FIELD_DELIMITER)
                 return -EMISPLACED_DELIMITER;
+            else if (rawMessage[i] == PROTOCOL_CHECKSUM_DELIMITER)
+                return -EMISPLACED_CHECKSUM_DELIMITER;
         }
         else if (i > PROTOCOL_DATA_START_INDEX && i < MESSAGE_DATA_START_INDEX)
         {
             if (rawMessage[i] == PROTOCOL_FIELD_DELIMITER)
                 return -EMISPLACED_DELIMITER;
+            else if (rawMessage[i] == PROTOCOL_CHECKSUM_DELIMITER)
+                return -EMISPLACED_CHECKSUM_DELIMITER;
         }
     }
+
+    // ToDo: Optimize
+#ifdef __GNUC__
+    memcpy(receivedChecksum, rawMessage + checkSumIdealIndex + 1, 2);
+#elif __MSVC__
+    strcpy_s(receivedChecksum, 2, rawMessage + checkSumIdealIndex + 1);
+#endif
+
+    int calculatedChecksum = calculateChecksum(rawMessage + MESSAGE_TYPE_START_INDEX, rawMessage + checkSumIdealIndex);
+
+    int receivedChecksumValue = stringToHex((const unsigned char *) receivedChecksum);
+
+    if (calculatedChecksum != receivedChecksumValue)
+        return -EWRONG_CHECKSUM;
 
     return 0;
 }

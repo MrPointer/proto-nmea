@@ -5,6 +5,6 @@ project(proto-nmea LANGUAGES C CXX)
 add_subdirectory(src)
 
 if(TEST)
-   add_subdirectory(test) 
+    add_subdirectory(test)
 endif()
 
