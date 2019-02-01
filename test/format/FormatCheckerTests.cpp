@@ -255,7 +255,7 @@ SCENARIO("Data-less messages are reported as errors")
         WHEN("Message is validated")
         {
             int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
-            THEN("Invalid checksum position returned")
+            THEN("Missing Checksum Data error is returned")
             {
                 REQUIRE(errorCode == -EMISSING_MESSAGE_DATA);
             }

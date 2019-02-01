@@ -42,22 +42,10 @@ int8_t validateMessageFormat(const char *rawMessage)
     if (!isdigit(rawMessage[checkSumIdealIndex + 1]) || !isdigit(rawMessage[checkSumIdealIndex + 2]))
         return -EINVALID_CHECKSUM;*/
 
-    for (int i = 1; i < messageLength; ++i)
+    for (int i = PROTOCOL_DATA_START_INDEX; i <= MESSAGE_TYPE_MIN_LENGTH; ++i)
     {
-        if (i == PROTOCOL_DATA_START_INDEX)
-        {
-            if (rawMessage[i] == PROTOCOL_FIELD_DELIMITER)
-                return -EMISPLACED_DELIMITER;
-            else if (rawMessage[i] == PROTOCOL_CHECKSUM_DELIMITER)
-                return -EMISPLACED_CHECKSUM_DELIMITER;
-        }
-        else if (i > PROTOCOL_DATA_START_INDEX && i < MESSAGE_DATA_START_INDEX)
-        {
-            if (rawMessage[i] == PROTOCOL_FIELD_DELIMITER)
-                return -EMISPLACED_DELIMITER;
-            else if (rawMessage[i] == PROTOCOL_CHECKSUM_DELIMITER)
-                return -EMISPLACED_CHECKSUM_DELIMITER;
-        }
+        if (!isalpha(rawMessage[i])) // Each char representing message type must be an alpha
+            return -EINVALID_MESSAGE_TYPE;
     }
 
     // ToDo: Optimize
