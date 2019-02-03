@@ -1,7 +1,16 @@
 cmake_minimum_required(VERSION 3.8.2)
 
-project(proto-nmea-lib LANGUAGES C)
-
-add_library(proto-nmea-lib STATIC format/FormatChecker.c messageParser.c ../include/proto_nmea/messageParser.h)
+add_library(proto-nmea-lib STATIC
+        messageParser.c format/FormatChecker.c
+        utility/GlobalUtils.c utility/ChecksumUtils.c)
 
 target_include_directories(proto-nmea-lib PUBLIC ../include)
+
+# Explictly define the compiler ID for the target - Mostly needed to aid CLion's insights
+if ("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU")
+    target_compile_definitions(proto-nmea-lib PRIVATE "__GNUC__")
+elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "MSVC")
+    target_compile_definitions(proto-nmea-lib PRIVATE "__MSVC__")
+elseif ("${CMAKE_C_COMPILER_ID}" STREQUAL "Clang")
+    target_compile_definitions(proto-nmea-lib PRIVATE "__CLANG__")
+endif ()

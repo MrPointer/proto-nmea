@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 3.8.2)
 
-project(proto-nmea-tests LANGUAGES C CXX)
-
 set(C_STANDARD 11)
 set(CXX_STANDARD 14)
 
