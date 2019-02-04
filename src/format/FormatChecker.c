@@ -54,11 +54,7 @@ int8_t validateMessageFormat(const char *rawMessage)
     }
 
     // ToDo: Optimize
-#ifdef __GNUC__
     memcpy(receivedChecksum, rawMessage + checkSumIdealIndex + 1, 2);
-#elif __MSVC__
-    strcpy_s(receivedChecksum, 2, rawMessage + checkSumIdealIndex + 1);
-#endif
 
     int calculatedChecksum = calculateChecksum(rawMessage + MESSAGE_TYPE_START_INDEX, rawMessage + checkSumIdealIndex);
 

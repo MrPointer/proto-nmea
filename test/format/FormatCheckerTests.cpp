@@ -5,6 +5,7 @@
 #include "../CatchSmartInclude.hpp"
 #include <string>
 #include <iostream>
+
 #include "../utility/TypeConversionUtils.hpp"
 
 #include <proto_nmea/format/FormatChecker.h>
@@ -17,6 +18,7 @@ SCENARIO("Null message is validated and considered general error")
         WHEN("Message format is validated")
         {
             int8_t errorCode = validateMessageFormat(nullMessage.c_str());
+
             THEN("General error message is returned")
             {
                 REQUIRE(errorCode == -ENULL_STRING);
@@ -30,11 +32,11 @@ SCENARIO("Invalid protocol start chars are validated and considered errors")
     GIVEN("Invalid protocol start char")
     {
         char invalid_char = '#';
-        std::string nmeaMessage{1, invalid_char};
+        std::string message{1, invalid_char};
 
         WHEN("Message format is validated")
         {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Invalid protocol beginning error returned")
             {
@@ -88,11 +90,13 @@ SCENARIO("Invalid message lengths are reported as errors")
 {
     GIVEN("Message shorter than minimum")
     {
-        std::string shortNmeaMessage{PROTOCOL_START_CHAR};
-        shortNmeaMessage = shortNmeaMessage.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
+        std::string shortMessage{PROTOCOL_START_CHAR};
+        shortMessage = shortMessage.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
+
         WHEN("Message format is validated")
         {
-            int8_t errorCode = validateMessageFormat(shortNmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(shortMessage.c_str());
+
             THEN("Short Message error is returned")
             {
                 REQUIRE(errorCode == -ESHORT_MESSAGE);
@@ -102,14 +106,13 @@ SCENARIO("Invalid message lengths are reported as errors")
     GIVEN("Message longer than maximum")
     {
         std::string longMessage{PROTOCOL_START_CHAR};
-        for (int i = 0; i < MESSAGE_MAX_LENGTH; ++i)
-        {
-            longMessage += "1";
-        }
+        longMessage = longMessage.append(MESSAGE_MAX_LENGTH, 'a');
         longMessage = longMessage.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
+
         WHEN("Message format is validated")
         {
             int8_t errorCode = validateMessageFormat(longMessage.c_str());
+
             THEN("Long Message error is returned")
             {
                 REQUIRE(errorCode == -ELONG_MESSAGE);
@@ -210,6 +213,7 @@ SCENARIO("Invalid checksum data reported as error")
         WHEN("Message is validated")
         {
             int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+
             THEN("Missing Checksum Data error is returned")
             {
                 REQUIRE(errorCode == -EMISSING_CHECKSUM_DATA);
@@ -230,6 +234,7 @@ SCENARIO("Invalid checksum data reported as error")
         WHEN("Message is validated")
         {
             int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+
             THEN("Wrong Checksum Data error is returned")
             {
                 REQUIRE(errorCode == -EWRONG_CHECKSUM);
@@ -289,3 +294,7 @@ SCENARIO("Valid messages are reported as valid")
             THEN("Valid format is returned")
             {
                 REQUIRE(errorCode == -EVALID);
+            }
+        }
+    }
+}
