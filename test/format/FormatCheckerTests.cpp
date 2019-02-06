@@ -10,11 +10,12 @@
 
 #include <proto_nmea/format/FormatChecker.h>
 
-SCENARIO("Null message is validated and considered general error")
+SCENARIO("Null messages are reported as error")
 {
     GIVEN("Null message")
     {
         std::string nullMessage{};
+
         WHEN("Message format is validated")
         {
             int8_t errorCode = validateMessageFormat(nullMessage.c_str());
@@ -27,12 +28,12 @@ SCENARIO("Null message is validated and considered general error")
     }
 }
 
-SCENARIO("Invalid protocol start chars are validated and considered errors")
+SCENARIO("Invalid protocol start chars are reported errors")
 {
     GIVEN("Invalid protocol start char")
     {
         char invalid_char = '#';
-        std::string message{1, invalid_char};
+        std::string message{invalid_char};
 
         WHEN("Message format is validated")
         {
@@ -46,18 +47,18 @@ SCENARIO("Invalid protocol start chars are validated and considered errors")
     }
 }
 
-SCENARIO("Invalid protocol stop chars are validated and considered errors")
+SCENARIO("Invalid protocol stop chars are reported as errors")
 {
     GIVEN("Invalid protocol stop chars")
     {
         std::string stopChars{"ab"};
-        std::string nmeaMessage{"$GPGGA,*12"};
+        std::string message{"$GPGGA,*12"}; // ToDo: Factory?
 
-        nmeaMessage = nmeaMessage.append(stopChars);
+        message = message.append(stopChars);
 
         WHEN("Message format is validated")
         {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Invalid protocol ending error returned")
             {
@@ -103,6 +104,7 @@ SCENARIO("Invalid message lengths are reported as errors")
             }
         }
     }
+
     GIVEN("Message longer than maximum")
     {
         std::string longMessage{PROTOCOL_START_CHAR};
@@ -123,20 +125,20 @@ SCENARIO("Invalid message lengths are reported as errors")
 
 SCENARIO("Invalid message types are reported as errors")
 {
-    std::string nmeaMessage{PROTOCOL_START_CHAR};
-    std::string messageEndChars{};
+    std::string message{PROTOCOL_START_CHAR};
 
+    std::string messageEndChars{};
     messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
 
     GIVEN("Delimiter after protocol start char")
     {
-        nmeaMessage = nmeaMessage.append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
+        message = message.append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
                 .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
-        nmeaMessage += messageEndChars;
+        message += messageEndChars;
 
         WHEN("Message format is validated")
         {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Invalid Message Type error is returned")
             {
@@ -147,13 +149,13 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Delimiter in the middle of Talker-ID")
     {
-        nmeaMessage = nmeaMessage.append(1, 'G').append(1, PROTOCOL_FIELD_DELIMITER).append(1, 'P').append(10, 'a')
+        message = message.append(1, 'G').append(1, PROTOCOL_FIELD_DELIMITER).append(1, 'P').append(10, 'a')
                 .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
-        nmeaMessage += messageEndChars;
+        message += messageEndChars;
 
         WHEN("Message format is validated")
         {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Invalid Message Type error is returned")
             {
@@ -164,13 +166,13 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Delimiter between Talker-ID and Message Type")
     {
-        nmeaMessage = nmeaMessage.append("GP").append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
+        message = message.append("GP").append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
                 .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
-        nmeaMessage += messageEndChars;
+        message += messageEndChars;
 
         WHEN("Message format is validated")
         {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Invalid Message Type error is returned")
             {
@@ -181,13 +183,13 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Delimiter in the middle of Message Type")
     {
-        nmeaMessage = nmeaMessage.append("GPGG").append(1, PROTOCOL_FIELD_DELIMITER).append(1, 'A').append(10, 'a')
+        message = message.append("GPGG").append(1, PROTOCOL_FIELD_DELIMITER).append(1, 'A').append(10, 'a')
                 .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
-        nmeaMessage += messageEndChars;
+        message += messageEndChars;
 
         WHEN("Message format is validated")
         {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Invalid Message Type error is returned")
             {
@@ -199,20 +201,20 @@ SCENARIO("Invalid message types are reported as errors")
 
 SCENARIO("Invalid checksum data reported as error")
 {
+    std::string message{PROTOCOL_START_CHAR};
+
     std::string messageEndChars;
     messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
 
     GIVEN("Valid checksum position without checksum data")
     {
-        std::string nmeaMessage{PROTOCOL_START_CHAR};
-
-        nmeaMessage = nmeaMessage.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a')
+        message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a')
                 .append(1, PROTOCOL_CHECKSUM_DELIMITER);
-        nmeaMessage += messageEndChars;
+        message += messageEndChars;
 
         WHEN("Message is validated")
         {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Missing Checksum Data error is returned")
             {
@@ -223,17 +225,13 @@ SCENARIO("Invalid checksum data reported as error")
 
     GIVEN("Valid checksum format, non-matching data")
     {
-        std::string nmeaMessage{PROTOCOL_START_CHAR};
-
-        size_t numberOfDataChars = 12;
-
-        nmeaMessage = nmeaMessage.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(numberOfDataChars, 'a')
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append(std::to_string(numberOfDataChars));
-        nmeaMessage += messageEndChars;
+        message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
+                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append(intToHexString(0));
+        message += messageEndChars;
 
         WHEN("Message is validated")
         {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Wrong Checksum Data error is returned")
             {
@@ -247,18 +245,18 @@ SCENARIO("Data-less messages are reported as errors")
 {
     GIVEN("Message without data")
     {
-        std::string nmeaMessage{PROTOCOL_START_CHAR};
-        std::string nmeaMessageEnd;
+        std::string message{PROTOCOL_START_CHAR};
 
+        std::string nmeaMessageEnd;
         nmeaMessageEnd = nmeaMessageEnd.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
 
-        nmeaMessage = nmeaMessage.append("PGGA").append(1, PROTOCOL_FIELD_DELIMITER)
+        message = message.append("PGGA").append(1, PROTOCOL_FIELD_DELIMITER)
                 .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
-        nmeaMessage += nmeaMessageEnd;
+        message += nmeaMessageEnd;
 
         WHEN("Message is validated")
         {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Missing Checksum Data error is returned")
             {
@@ -272,24 +270,23 @@ SCENARIO("Valid messages are reported as valid")
 {
     GIVEN("Valid NMEA message")
     {
-        std::string nmeaMessage{PROTOCOL_START_CHAR};
+        std::string message{PROTOCOL_START_CHAR};
         std::string messageEndChars;
 
         messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
 
-        nmeaMessage = nmeaMessage.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a');
+        message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a');
 
         // Checksum of the message above - Has been calculated by 3rd party tool to avoid dependency between units
         int messageChecksum = 0x1b;
 
-        nmeaMessage = nmeaMessage.append(1, PROTOCOL_CHECKSUM_DELIMITER)
-                .append(intToHexString(messageChecksum));
+        message = message.append(1, PROTOCOL_CHECKSUM_DELIMITER).append(intToHexString(messageChecksum));
 
-        nmeaMessage += messageEndChars;
+        message += messageEndChars;
 
         WHEN("Message is validated")
         {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
+            int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Valid format is returned")
             {

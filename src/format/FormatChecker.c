@@ -102,9 +102,6 @@ static int8_t validateChecksumFormat(const char *message, size_t messageSize, si
         else
             return -EMISSING_CHECKSUM;
     }
-    /*// Should be followed by 2 integers representing the checksum
-    if (!isdigit(rawMessage[checkSumIdealIndex + 1]) || !isdigit(rawMessage[checkSumIdealIndex + 2]))
-        return -EINVALID_CHECKSUM;*/
 
     return EVALID;
 }
