@@ -40,3 +40,16 @@ int stringToHex(unsigned const char *hexString)
     }
     return ret;
 }
+
+bool isHex(const char c)
+{
+    if (c < '0' || c > '9')
+    {
+        if (c < 'a' || c > 'f')
+        {
+            if (c < 'A' || c > 'F')
+                return false;
+        }
+    }
+    return true;
+}

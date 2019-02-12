@@ -94,6 +94,7 @@ static int8_t validateChecksumFormat(const char *message, size_t messageSize, si
 {
     // Validate checksum
     *checksumIdealIndex = messageSize - PROTOCOL_STOP_LENGTH - CHECKSUM_FULL_LENGTH;
+
     // Should start with a checksum delimiter
     if (message[*checksumIdealIndex] != PROTOCOL_CHECKSUM_DELIMITER)
     {
@@ -102,6 +103,9 @@ static int8_t validateChecksumFormat(const char *message, size_t messageSize, si
         else
             return -EMISSING_CHECKSUM;
     }
+
+    if (!isHex(message[*checksumIdealIndex + 1]) || !isHex(message[*checksumIdealIndex + 2]))
+        return -EINVALID_CHECKSUM;
 
     return EVALID;
 }

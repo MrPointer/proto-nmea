@@ -11,6 +11,7 @@ extern "C"
 #endif
 
 #include <inttypes.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 #include "../Errors.h"
@@ -24,6 +25,8 @@ extern "C"
  * @return -1 on error, or result (max (sizeof(long)*8)-1 bits)
  */
 int stringToHex(unsigned const char *hexString);
+
+bool isHex(const char c);
 
 #ifdef __cplusplus
 }

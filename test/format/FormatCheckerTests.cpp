@@ -223,6 +223,23 @@ SCENARIO("Invalid checksum data reported as error")
         }
     }
 
+    GIVEN("Valid checksum position, invalid checksum data")
+    {
+        message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
+                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("mn");
+        message += messageEndChars;
+
+        WHEN("Message is validated")
+        {
+            int8_t errorCode = validateMessageFormat(message.c_str());
+
+            THEN("Invalid Checksum error is returned")
+            {
+                REQUIRE(errorCode == -EINVALID_CHECKSUM);
+            }
+        }
+    }
+
     GIVEN("Valid checksum format, non-matching data")
     {
         message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
