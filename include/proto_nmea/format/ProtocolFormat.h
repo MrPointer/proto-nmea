@@ -19,6 +19,8 @@ extern "C"
 #define PROTOCOL_CHECKSUM_DELIMITER '*'
 
 #define TALKER_PROPRIETARY_ID 'P'
+#define TALKER_GNSS_ID 'G'
+
 //endregion
 
 //region Lengths

@@ -112,6 +112,11 @@ static int8_t validateChecksumFormat(const char *message, size_t messageSize, si
 
 static int8_t validateMessageType(const char *message)
 {
+    // Validate Talker-ID
+    if (message[MESSAGE_TYPE_START_INDEX] != TALKER_PROPRIETARY_ID &&
+        message[MESSAGE_TYPE_START_INDEX] != TALKER_GNSS_ID)
+        return -EINVALID_MESSAGE_TYPE;
+
     if (message[MESSAGE_TYPE_START_INDEX] == TALKER_PROPRIETARY_ID)
     {
         // Check if message is too short or too long

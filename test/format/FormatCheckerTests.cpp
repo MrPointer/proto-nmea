@@ -132,8 +132,9 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Message type shorter than minimum")
     {
-        message = message.append(MESSAGE_TYPE_MIN_LENGTH - 1, 'a').append(1, PROTOCOL_FIELD_DELIMITER)
-                .append(10, 'a').append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+        message = message.append(1, TALKER_PROPRIETARY_ID).append(MESSAGE_TYPE_MIN_LENGTH - 2, 'a')
+                .append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
+                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
         message += messageEndChars;
 
         WHEN("Message format is validated")
@@ -149,7 +150,25 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Message type longer than maximum")
     {
-        message = message.append(MESSAGE_TYPE_MAX_LENGTH + 1, 'a').append(1, PROTOCOL_FIELD_DELIMITER)
+        message = message.append(1, TALKER_GNSS_ID).append(MESSAGE_TYPE_MAX_LENGTH, 'a')
+                .append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
+                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+        message += messageEndChars;
+
+        WHEN("Message format is validated")
+        {
+            int8_t errorCode = validateMessageFormat(message.c_str());
+
+            THEN("Invalid Message Type error is returned")
+            {
+                REQUIRE(errorCode == -EINVALID_MESSAGE_TYPE);
+            }
+        }
+    }
+
+    GIVEN("Unknown Talker ID")
+    {
+        message = message.append(MESSAGE_TYPE_MIN_LENGTH, 'a').append(1, PROTOCOL_FIELD_DELIMITER)
                 .append(10, 'a').append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
         message += messageEndChars;
 
