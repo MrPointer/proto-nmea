@@ -130,6 +130,40 @@ SCENARIO("Invalid message types are reported as errors")
     std::string messageEndChars{};
     messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
 
+    GIVEN("Message type shorter than minimum")
+    {
+        message = message.append(MESSAGE_TYPE_MIN_LENGTH - 1, 'a').append(1, PROTOCOL_FIELD_DELIMITER)
+                .append(10, 'a').append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+        message += messageEndChars;
+
+        WHEN("Message format is validated")
+        {
+            int8_t errorCode = validateMessageFormat(message.c_str());
+
+            THEN("Invalid Message Type error is returned")
+            {
+                REQUIRE(errorCode == -EINVALID_MESSAGE_TYPE);
+            }
+        }
+    }
+
+    GIVEN("Message type longer than maximum")
+    {
+        message = message.append(MESSAGE_TYPE_MAX_LENGTH + 1, 'a').append(1, PROTOCOL_FIELD_DELIMITER)
+                .append(10, 'a').append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+        message += messageEndChars;
+
+        WHEN("Message format is validated")
+        {
+            int8_t errorCode = validateMessageFormat(message.c_str());
+
+            THEN("Invalid Message Type error is returned")
+            {
+                REQUIRE(errorCode == -EINVALID_MESSAGE_TYPE);
+            }
+        }
+    }
+
     GIVEN("Delimiter after protocol start char")
     {
         message = message.append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')

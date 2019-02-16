@@ -112,10 +112,31 @@ static int8_t validateChecksumFormat(const char *message, size_t messageSize, si
 
 static int8_t validateMessageType(const char *message)
 {
-    for (int i = MESSAGE_TYPE_START_INDEX; i <= MESSAGE_TYPE_START_INDEX + MESSAGE_TYPE_MIN_LENGTH; ++i)
+    if (message[MESSAGE_TYPE_START_INDEX] == TALKER_PROPRIETARY_ID)
     {
-        if (!isalpha(message[i]))
+        // Check if message is too short or too long
+        if (message[MESSAGE_DATA_START_MIN_INDEX] != PROTOCOL_FIELD_DELIMITER)
             return -EINVALID_MESSAGE_TYPE;
+
+        // Talker ID consists of a single char, iterate exclusive
+        for (int i = MESSAGE_TYPE_START_INDEX + 1; i < MESSAGE_DATA_START_MIN_INDEX; ++i)
+        {
+            if (!isalpha(message[i]))
+                return -EINVALID_MESSAGE_TYPE;
+        }
+    }
+    else
+    {
+        // Check if message is too short or too long
+        if (message[MESSAGE_DATA_START_MAX_INDEX] != PROTOCOL_FIELD_DELIMITER)
+            return -EINVALID_MESSAGE_TYPE;
+
+        // Talker ID consists of 2 chars, iterate inclusive
+        for (int i = MESSAGE_TYPE_START_INDEX + 1; i <= MESSAGE_DATA_START_MIN_INDEX; ++i)
+        {
+            if (!isalpha(message[i]))
+                return -EINVALID_MESSAGE_TYPE;
+        }
     }
 
     return EVALID;
