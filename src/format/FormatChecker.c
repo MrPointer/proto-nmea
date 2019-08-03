@@ -21,11 +21,11 @@
 
 static int8_t validateMessageLengthInRange(size_t messageSize);
 
-static int8_t validateChecksumFormat(const char *message, size_t messageSize, size_t *checksumIdealIndex);
-
-static int8_t validateMessageType(const char *message);
+static int8_t validateChecksumFormat(const char *message, size_t checksumIdealIndex);
 
 static int8_t validateChecksumData(const char *message, size_t checksumDelimiterIndex);
+
+static int8_t validateMessageType(const char *message);
 
 //endregion
 
@@ -50,17 +50,17 @@ int8_t validateFixedSizeMessageFormat(const char *rawMessage, size_t messageSize
     if (errorCode)
         return errorCode;
 
-    size_t checksumDelimiterPosition;
-
-    errorCode = validateChecksumFormat(rawMessage, messageSize, &checksumDelimiterPosition);
-    if (errorCode)
-        return errorCode;
-
-    errorCode = validateMessageType(rawMessage);
+    // Calculate checksum index
+    size_t checksumDelimiterPosition = messageSize - PROTOCOL_STOP_LENGTH - CHECKSUM_FULL_LENGTH;
+    errorCode = validateChecksumFormat(rawMessage, checksumDelimiterPosition);
     if (errorCode)
         return errorCode;
 
     errorCode = validateChecksumData(rawMessage, checksumDelimiterPosition);
+    if (errorCode)
+        return errorCode;
+
+    errorCode = validateMessageType(rawMessage);
     if (errorCode)
         return errorCode;
 
@@ -86,22 +86,34 @@ static int8_t validateMessageLengthInRange(size_t messageSize)
     return EVALID;
 }
 
-static int8_t validateChecksumFormat(const char *message, size_t messageSize, size_t *checksumIdealIndex)
+static int8_t validateChecksumFormat(const char *message, size_t checksumIdealIndex)
 {
-    // Validate checksum
-    *checksumIdealIndex = messageSize - PROTOCOL_STOP_LENGTH - CHECKSUM_FULL_LENGTH;
-
     // Should start with a checksum delimiter
-    if (message[*checksumIdealIndex] != PROTOCOL_CHECKSUM_DELIMITER)
+    if (message[checksumIdealIndex] != PROTOCOL_CHECKSUM_DELIMITER)
     {
-        if (strchr(message + *checksumIdealIndex, PROTOCOL_CHECKSUM_DELIMITER))
+        if (strchr(message + checksumIdealIndex, PROTOCOL_CHECKSUM_DELIMITER))
             return -EMISSING_CHECKSUM_DATA;
         else
             return -EMISSING_CHECKSUM;
     }
 
-    if (!isHex(message[*checksumIdealIndex + 1]) || !isHex(message[*checksumIdealIndex + 2]))
+    if (!isHex(message[checksumIdealIndex + 1]) || !isHex(message[checksumIdealIndex + 2]))
         return -EINVALID_CHECKSUM;
+
+    return EVALID;
+}
+
+static int8_t validateChecksumData(const char *message, size_t checksumDelimiterIndex)
+{
+    char receivedChecksum[3] = {0};
+
+    memcpy(receivedChecksum, message + checksumDelimiterIndex + 1, 2);
+
+    int calculatedChecksum = calculateChecksum(message + MESSAGE_TYPE_START_INDEX, message + checksumDelimiterIndex);
+    int receivedChecksumValue = stringToHex((const unsigned char *) receivedChecksum);
+
+    if (calculatedChecksum != receivedChecksumValue)
+        return -EWRONG_CHECKSUM;
 
     return EVALID;
 }
@@ -139,23 +151,6 @@ static int8_t validateMessageType(const char *message)
                 return -EINVALID_MESSAGE_TYPE;
         }
     }
-
-    return EVALID;
-}
-
-static int8_t validateChecksumData(const char *message, size_t checksumDelimiterIndex)
-{
-    char receivedChecksum[3] = {0};
-
-    // ToDo: Optimize?
-    memcpy(receivedChecksum, message + checksumDelimiterIndex + 1, 2);
-
-    int calculatedChecksum = calculateChecksum(message + MESSAGE_TYPE_START_INDEX, message + checksumDelimiterIndex);
-
-    int receivedChecksumValue = stringToHex((const unsigned char *) receivedChecksum);
-
-    if (calculatedChecksum != receivedChecksumValue)
-        return -EWRONG_CHECKSUM;
 
     return EVALID;
 }
