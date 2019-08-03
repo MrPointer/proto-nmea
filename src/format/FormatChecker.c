@@ -4,9 +4,20 @@
 
 #include "proto_nmea/format/FormatChecker.h"
 
-//region Helper Functions Declaration
+//region Helper Macros Definitions
 
-static int8_t validateInitialMessageFormat(const char *rawMessage);
+#define VALIDATE_MESSAGE_BEGINNING_FITS_PROTOCOL(message) \
+    if (*(message) != PROTOCOL_START_CHAR) \
+        return -EINVALID_PROTOCOL_BEGINNING;
+
+#define VALIDATE_MESSAGE_ENDING_FITS_PROTOCOL(message, messageSize) \
+    if ((message)[(messageSize) - 2] != PROTOCOL_STOP_CHAR_1 || \
+        (message)[(messageSize) - 1] != PROTOCOL_STOP_CHAR_2) \
+            return -EINVALID_PROTOCOL_ENDING;
+
+//endregion
+
+//region Helper Functions Declaration
 
 static int8_t validateMessageLengthInRange(size_t messageSize);
 
@@ -29,16 +40,13 @@ int8_t validateMessageFormat(const char *message)
 
 int8_t validateFixedSizeMessageFormat(const char *rawMessage, size_t messageSize)
 {
-    int8_t errorCode = validateInitialMessageFormat(rawMessage);
-    if (errorCode)
-        return errorCode;
+    if (IS_NULL_STRING(rawMessage))
+        return -ENULL_STRING;
 
-    // Validate message ending fits protocol
-    if (rawMessage[messageSize - 2] != PROTOCOL_STOP_CHAR_1 ||
-        rawMessage[messageSize - 1] != PROTOCOL_STOP_CHAR_2)
-        return -EINVALID_PROTOCOL_ENDING;
+    VALIDATE_MESSAGE_BEGINNING_FITS_PROTOCOL(rawMessage)
+    VALIDATE_MESSAGE_ENDING_FITS_PROTOCOL(rawMessage, messageSize)
 
-    errorCode = validateMessageLengthInRange(messageSize);
+    int8_t errorCode = validateMessageLengthInRange(messageSize);
     if (errorCode)
         return errorCode;
 
@@ -62,18 +70,6 @@ int8_t validateFixedSizeMessageFormat(const char *rawMessage, size_t messageSize
 //endregion
 
 //region Helper Functions Definition/Implementation
-
-static int8_t validateInitialMessageFormat(const char *rawMessage)
-{
-    if (IS_NULL_STRING(rawMessage))
-        return -ENULL_STRING;
-
-    // Validate message beginning fits protocol first as it's the fastest check
-    if (*rawMessage != PROTOCOL_START_CHAR)
-        return -EINVALID_PROTOCOL_BEGINNING;
-
-    return EVALID;
-}
 
 static int8_t validateMessageLengthInRange(size_t messageSize)
 {

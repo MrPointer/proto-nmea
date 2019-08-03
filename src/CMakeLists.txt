@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8.2)
 
 add_library(proto-nmea-lib STATIC
-        messageParser.c format/FormatChecker.c
+        format/FormatChecker.c
         utility/GlobalUtils.c utility/ChecksumUtils.c)
 
 target_include_directories(proto-nmea-lib PUBLIC ../include)
