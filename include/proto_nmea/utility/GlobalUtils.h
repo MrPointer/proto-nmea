@@ -16,18 +16,6 @@ extern "C"
 
 #include "../Errors.h"
 
-/**
- * @brief Convert a hexadecimal string to a signed int
- * Works only with unsigned/positive numbers.
- *
- * @param hexString without decoration, case insensitive.
- *
- * @return -1 on error, or result (max (sizeof(long)*8)-1 bits)
- */
-int stringToHex(unsigned const char *hexString);
-
-bool isHex(const char c);
-
 #ifdef __cplusplus
 }
 #endif

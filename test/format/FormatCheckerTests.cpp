@@ -133,8 +133,8 @@ SCENARIO("Invalid message types are reported as errors")
     GIVEN("Message type shorter than minimum")
     {
         message = message.append(1, TALKER_PROPRIETARY_ID).append(MESSAGE_TYPE_MIN_LENGTH - 2, 'a')
-                .append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+                         .append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
         message += messageEndChars;
 
         WHEN("Message format is validated")
@@ -151,8 +151,8 @@ SCENARIO("Invalid message types are reported as errors")
     GIVEN("Message type longer than maximum")
     {
         message = message.append(1, TALKER_GNSS_ID).append(MESSAGE_TYPE_MAX_LENGTH, 'a')
-                .append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+                         .append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
         message += messageEndChars;
 
         WHEN("Message format is validated")
@@ -169,7 +169,7 @@ SCENARIO("Invalid message types are reported as errors")
     GIVEN("Unknown Talker ID")
     {
         message = message.append(MESSAGE_TYPE_MIN_LENGTH, 'a').append(1, PROTOCOL_FIELD_DELIMITER)
-                .append(10, 'a').append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+                         .append(10, 'a').append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
         message += messageEndChars;
 
         WHEN("Message format is validated")
@@ -186,7 +186,7 @@ SCENARIO("Invalid message types are reported as errors")
     GIVEN("Delimiter after protocol start char")
     {
         message = message.append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
         message += messageEndChars;
 
         WHEN("Message format is validated")
@@ -202,8 +202,9 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Delimiter in the middle of Talker-ID")
     {
-        message = message.append(1, 'G').append(1, PROTOCOL_FIELD_DELIMITER).append(1, 'P').append(10, 'a')
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+        message = message.append(1, 'G').append(1, PROTOCOL_FIELD_DELIMITER)
+                         .append(1, 'P').append(10, 'a')
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
         message += messageEndChars;
 
         WHEN("Message format is validated")
@@ -220,7 +221,7 @@ SCENARIO("Invalid message types are reported as errors")
     GIVEN("Delimiter between Talker-ID and Message Type")
     {
         message = message.append("GP").append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
         message += messageEndChars;
 
         WHEN("Message format is validated")
@@ -236,8 +237,9 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Delimiter in the middle of Message Type")
     {
-        message = message.append("GPGG").append(1, PROTOCOL_FIELD_DELIMITER).append(1, 'A').append(10, 'a')
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+        message = message.append("GPGG").append(1, PROTOCOL_FIELD_DELIMITER)
+                         .append(1, 'A').append(10, 'a')
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
         message += messageEndChars;
 
         WHEN("Message format is validated")
@@ -262,7 +264,7 @@ SCENARIO("Invalid checksum data reported as error")
     GIVEN("Valid checksum position without checksum data")
     {
         message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a')
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER);
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER);
         message += messageEndChars;
 
         WHEN("Message is validated")
@@ -279,7 +281,7 @@ SCENARIO("Invalid checksum data reported as error")
     GIVEN("Valid checksum position, invalid checksum data")
     {
         message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("mn");
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("mn");
         message += messageEndChars;
 
         WHEN("Message is validated")
@@ -296,7 +298,7 @@ SCENARIO("Invalid checksum data reported as error")
     GIVEN("Valid checksum format, non-matching data")
     {
         message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append(intToHexString(0));
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append(intToHexString(0));
         message += messageEndChars;
 
         WHEN("Message is validated")
@@ -321,7 +323,7 @@ SCENARIO("Data-less messages are reported as errors")
         nmeaMessageEnd = nmeaMessageEnd.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
 
         message = message.append("PGGA").append(1, PROTOCOL_FIELD_DELIMITER)
-                .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
         message += nmeaMessageEnd;
 
         WHEN("Message is validated")
@@ -343,7 +345,8 @@ SCENARIO("Valid messages are reported as valid")
         std::string message{PROTOCOL_START_CHAR};
         std::string messageEndChars;
 
-        messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
+        messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1)
+                                         .append(1, PROTOCOL_STOP_CHAR_2);
 
         message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a');
 

@@ -2,7 +2,7 @@
 // Copyright (c) 2019 Takpit. All rights reserved.
 //
 
-#include "proto_nmea/utility/GlobalUtils.h"
+#include "proto_nmea/utility/HexUtils.h"
 
 //region Hex Table
 
@@ -31,17 +31,17 @@ static const uint8_t hextable[] = {
 
 //endregion
 
-int stringToHex(unsigned const char *hexString)
+uint32_t stringToHex(unsigned const char *hexString)
 {
-    int ret = 0;
+    uint32_t ret = 0;
     while (*hexString && ret >= 0)
     {
-        ret = (ret << 4) | hextable[*hexString++];
+        ret = (ret << 4u) | hextable[*hexString++];
     }
     return ret;
 }
 
-bool isHex(const char c)
+bool isHex(char c)
 {
     if (c < '0' || c > '9')
     {

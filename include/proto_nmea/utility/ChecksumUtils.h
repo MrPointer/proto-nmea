@@ -10,7 +10,7 @@ extern "C"
 {
 #endif
 
-#include "GlobalUtils.h"
+#include "HexUtils.h"
 
 int calculateChecksum(const char *begin, const char *end);
 
