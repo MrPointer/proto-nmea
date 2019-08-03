@@ -12,7 +12,7 @@ extern "C"
 
 #include "HexUtils.h"
 
-int calculateChecksum(const char *begin, const char *end);
+uint32_t calculateChecksum(const unsigned char *begin, const unsigned char *end);
 
 #ifdef __cplusplus
 }

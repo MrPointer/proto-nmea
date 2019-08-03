@@ -31,7 +31,7 @@ uint32_t stringToHex(unsigned const char *hexString);
  * @param c Character to check
  * @return True if char represents a valid hexadecimal value, false otherwise.
  */
-bool isHex(char c);
+bool isHex(unsigned char c);
 
 #ifdef __cplusplus
 }

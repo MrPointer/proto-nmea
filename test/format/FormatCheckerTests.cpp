@@ -352,7 +352,6 @@ SCENARIO("Valid messages are reported as valid")
 
         // Checksum of the message above - Has been calculated by 3rd party tool to avoid dependency between units
         int messageChecksum = 0x1b;
-
         message = message.append(1, PROTOCOL_CHECKSUM_DELIMITER).append(intToHexString(messageChecksum));
 
         message += messageEndChars;

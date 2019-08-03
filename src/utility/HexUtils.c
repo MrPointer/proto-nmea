@@ -41,7 +41,7 @@ uint32_t stringToHex(unsigned const char *hexString)
     return ret;
 }
 
-bool isHex(char c)
+bool isHex(unsigned char c)
 {
     if (c < '0' || c > '9')
     {

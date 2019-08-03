@@ -14,6 +14,7 @@
 
 #include "../Errors.h"
 #include "ProtocolFormat.h"
+#include "ChecksumValidator.h"
 
 #ifdef __cplusplus
 extern "C"

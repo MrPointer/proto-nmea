@@ -4,9 +4,9 @@
 
 #include "proto_nmea/utility/ChecksumUtils.h"
 
-int calculateChecksum(const char *begin, const char *end)
+uint32_t calculateChecksum(const unsigned char *begin, const unsigned char *end)
 {
-    int checksum = 0x00;
+    uint32_t checksum = 0x00;
 
     if (begin == NULL)
         return -ENULL_STRING;
