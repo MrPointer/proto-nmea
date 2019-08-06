@@ -359,7 +359,39 @@ SCENARIO("Data-less messages are reported as errors")
     }
 }
 
-SCENARIO("Valid messages are reported as valid")
+SCENARIO("Handling valid messages (with mocks)", "[mock]")
+{
+    GIVEN("Valid NMEA message")
+    {
+        ENABLE_FFF_FAKE(validateChecksum)
+        validateChecksum_fake.return_val = EVALID;
+
+        std::string message{PROTOCOL_START_CHAR};
+        std::string messageEndChars;
+
+        messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1)
+                                         .append(1, PROTOCOL_STOP_CHAR_2);
+
+        message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a');
+
+        int messageChecksum = 0x01;
+        message = message.append(1, PROTOCOL_CHECKSUM_DELIMITER).append(intToHexString(messageChecksum));
+
+        message += messageEndChars;
+
+        WHEN("Message is validated")
+        {
+            int8_t errorCode = validateMessageFormat(message.c_str());
+
+            THEN("Valid format is returned")
+            {
+                REQUIRE(errorCode == EVALID);
+            }
+        }
+    }
+}
+
+/*SCENARIO("Valid messages are reported as valid")
 {
     GIVEN("Valid NMEA message")
     {
@@ -387,4 +419,4 @@ SCENARIO("Valid messages are reported as valid")
             }
         }
     }
-}
+}*/
