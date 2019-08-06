@@ -10,7 +10,14 @@ extern "C"
 {
 #endif
 
-#include "ChecksumValidator.h"
+#include <stdint.h>
+#include <string.h>
+
+#include "proto_nmea/format/ProtocolFormat.h"
+#include "proto_nmea/Errors.h"
+
+#include "proto_nmea/utility/StringUtils.h"
+#include "proto_nmea/utility/ChecksumUtils.h"
 
 #ifdef UNIT_TEST
 
