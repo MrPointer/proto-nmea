@@ -1,7 +1,7 @@
 {
-    "cmake.configureOnOpen": true,
-    "cmake.configureArgs": [
-        "-DTEST=ON"
-    ],
-  "cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/"
+  "cmake.generator": "Visual Studio 16 2019",
+  "cmake.configureOnOpen": true,
+  "cmake.configureArgs": [
+    "-DUNIT_TEST=ON"
+  ]
 }

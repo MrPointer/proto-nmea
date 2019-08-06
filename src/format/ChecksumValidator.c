@@ -1,5 +1,5 @@
 //
-// Created by timor on 04/08/2019.
+// Copyright (c) 2019 Takpit. All rights reserved.
 //
 
 #include "proto_nmea/format/ChecksumValidator.h"
@@ -36,8 +36,24 @@ static int8_t validateChecksumData(const unsigned char *message, size_t checksum
     return EVALID;
 }
 
+#ifdef UNIT_TEST
+
+int8_t validateChecksum_testWrapper(const unsigned char *message, size_t messageSize)
+{
+    return validateChecksum(message, messageSize);
+}
+
+#endif
+
+#ifdef UNIT_TEST
+
+static
+#endif
 int8_t validateChecksum(const unsigned char *message, size_t messageSize)
 {
+    if (IS_NULL_STRING(message))
+        return -ENULL_STRING;
+
     // Calculate checksum index
     size_t checksumDelimiterPosition = messageSize - PROTOCOL_STOP_LENGTH - CHECKSUM_FULL_LENGTH;
 
@@ -48,4 +64,6 @@ int8_t validateChecksum(const unsigned char *message, size_t messageSize)
     errorCode = validateChecksumData(message, checksumDelimiterPosition);
     if (errorCode)
         return errorCode;
+
+    return EVALID;
 }

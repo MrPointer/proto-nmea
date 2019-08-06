@@ -9,7 +9,6 @@
 #include <ctype.h>
 #include <string.h>
 
-#include "../utility/ChecksumUtils.h"
 #include "../utility/StringUtils.h"
 
 #include "../Errors.h"

@@ -4,7 +4,7 @@ project(proto-nmea LANGUAGES C CXX)
 
 add_subdirectory(src)
 
-if(TEST)
+if (UNIT_TEST)
     add_subdirectory(test)
 endif()
 

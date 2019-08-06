@@ -4,11 +4,14 @@ set(C_STANDARD 11)
 set(CXX_STANDARD 14)
 
 add_executable(proto-nmea-tests test_main.cpp
-        format/FormatCheckerTests.cpp utility/TypeConversionUtils.cpp utility/TypeConversionUtils.hpp)
+        format/FormatCheckerTests.cpp format/ChecksumValidatorTests.cpp
+        format/fakes/ChecksumValidatorFakes.c
+        utility/TypeConversionUtils.cpp)
 
 target_include_directories(proto-nmea-tests PRIVATE dependencies ../include)
 target_link_libraries(proto-nmea-tests PRIVATE proto-nmea-lib)
 
+# Use Catch as the testing framework
 find_package(Catch2)
 
 if (NOT Catch2_FOUND)
