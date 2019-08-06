@@ -46,7 +46,7 @@ int8_t validateFixedSizeMessageFormat(const char *rawMessage, size_t messageSize
     if (errorCode)
         return errorCode;
 
-    errorCode = validateChecksum(rawMessage, messageSize);
+    errorCode = validateMessageChecksum(rawMessage, messageSize);
     if (errorCode)
         return errorCode;
 

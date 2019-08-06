@@ -13,7 +13,7 @@
 
 #include "../Errors.h"
 #include "ProtocolFormat.h"
-#include "ChecksumValidator.h"
+#include "checksum/MessageChecksumValidator.h"
 
 #ifdef __cplusplus
 extern "C"
