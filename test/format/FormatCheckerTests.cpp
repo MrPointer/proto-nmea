@@ -133,8 +133,8 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Message type shorter than minimum")
     {
-        ENABLE_FFF_FAKE(validateChecksum)
-        validateChecksum_fake.return_val = EVALID;
+        ENABLE_FFF_FAKE(validateMessageChecksum)
+        validateMessageChecksum_fake.return_val = EVALID;
 
         message = message.append(1, TALKER_PROPRIETARY_ID).append(MESSAGE_TYPE_MIN_LENGTH - 2, 'a')
                          .append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a');
@@ -153,8 +153,8 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Message type longer than maximum")
     {
-        ENABLE_FFF_FAKE(validateChecksum)
-        validateChecksum_fake.return_val = EVALID;
+        ENABLE_FFF_FAKE(validateMessageChecksum)
+        validateMessageChecksum_fake.return_val = EVALID;
 
         message = message.append(1, TALKER_GNSS_ID).append(MESSAGE_TYPE_MAX_LENGTH, 'a')
                          .append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
@@ -174,8 +174,8 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Unknown Talker ID")
     {
-        ENABLE_FFF_FAKE(validateChecksum)
-        validateChecksum_fake.return_val = EVALID;
+        ENABLE_FFF_FAKE(validateMessageChecksum)
+        validateMessageChecksum_fake.return_val = EVALID;
 
         message = message.append(MESSAGE_TYPE_MIN_LENGTH, 'a').append(1, PROTOCOL_FIELD_DELIMITER)
                          .append(10, 'a').append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
@@ -194,8 +194,8 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Delimiter after protocol start char")
     {
-        ENABLE_FFF_FAKE(validateChecksum)
-        validateChecksum_fake.return_val = EVALID;
+        ENABLE_FFF_FAKE(validateMessageChecksum)
+        validateMessageChecksum_fake.return_val = EVALID;
 
         message = message.append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
                          .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
@@ -214,8 +214,8 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Delimiter in the middle of Talker-ID")
     {
-        ENABLE_FFF_FAKE(validateChecksum)
-        validateChecksum_fake.return_val = EVALID;
+        ENABLE_FFF_FAKE(validateMessageChecksum)
+        validateMessageChecksum_fake.return_val = EVALID;
 
         message = message.append(1, 'G').append(1, PROTOCOL_FIELD_DELIMITER)
                          .append(1, 'P').append(10, 'a')
@@ -235,8 +235,8 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Delimiter between Talker-ID and Message Type")
     {
-        ENABLE_FFF_FAKE(validateChecksum)
-        validateChecksum_fake.return_val = EVALID;
+        ENABLE_FFF_FAKE(validateMessageChecksum)
+        validateMessageChecksum_fake.return_val = EVALID;
 
         message = message.append("GP").append(1, PROTOCOL_FIELD_DELIMITER).append(10, 'a')
                          .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
@@ -255,8 +255,8 @@ SCENARIO("Invalid message types are reported as errors")
 
     GIVEN("Delimiter in the middle of Message Type")
     {
-        ENABLE_FFF_FAKE(validateChecksum)
-        validateChecksum_fake.return_val = EVALID;
+        ENABLE_FFF_FAKE(validateMessageChecksum)
+        validateMessageChecksum_fake.return_val = EVALID;
 
         message = message.append("GPGG").append(1, PROTOCOL_FIELD_DELIMITER)
                          .append(1, 'A').append(10, 'a')
@@ -359,12 +359,12 @@ SCENARIO("Data-less messages are reported as errors")
     }
 }
 
-SCENARIO("Handling valid messages (with mocks)", "[mock]")
+SCENARIO("Validating format of valid messages (with mocks)", "[mock]")
 {
     GIVEN("Valid NMEA message")
     {
-        ENABLE_FFF_FAKE(validateChecksum)
-        validateChecksum_fake.return_val = EVALID;
+        ENABLE_FFF_FAKE(validateMessageChecksum)
+        validateMessageChecksum_fake.return_val = EVALID;
 
         std::string message{PROTOCOL_START_CHAR};
         std::string messageEndChars;

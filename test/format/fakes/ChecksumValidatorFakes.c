@@ -4,4 +4,4 @@
 
 #include "ChecksumValidatorFakes.h"
 
-DEFINE_FAKE_VALUE_FUNC(int8_t, validateChecksum, const unsigned char*, size_t)
+DEFINE_FAKE_VALUE_FUNC(int8_t, validateMessageChecksum, const unsigned char*, size_t)

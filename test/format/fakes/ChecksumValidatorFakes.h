@@ -6,14 +6,14 @@
 #define PROTO_NMEA_CHECKSUMVALIDATORFAKES_H
 
 #include <fff.h>
-#include <proto_nmea/format/ChecksumValidator.h>
+#include <proto_nmea/format/checksum/MessageChecksumValidator.h>
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-DECLARE_FAKE_VALUE_FUNC(int8_t, validateChecksum, const unsigned char*, size_t)
+DECLARE_FAKE_VALUE_FUNC(int8_t, validateMessageChecksum, const unsigned char*, size_t)
 
 #ifdef __cplusplus
 }
