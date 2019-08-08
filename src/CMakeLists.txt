@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8.2)
 
 add_library(proto-nmea-lib STATIC
         format/FormatChecker.c format/checksum/MessageChecksumValidator.c
-        utility/ChecksumUtils.c utility/HexUtils.c format/checksum/ChecksumFormatValidator.c)
+        utility/ChecksumUtils.c utility/HexUtils.c format/checksum/ChecksumFormatValidator.c format/checksum/ChecksumValueComparator.c ../include/proto_nmea/format/checksum/ChecksumValueComparator.h)
 
 target_include_directories(proto-nmea-lib PUBLIC ../include)
 

@@ -4,29 +4,15 @@
 
 #include "proto_nmea/format/checksum/MessageChecksumValidator.h"
 
-static int8_t validateChecksumData(const unsigned char *checksumString, unsigned int calculatedChecksum)
-{
-    char receivedChecksum[3] = {0};
-
-    memcpy(receivedChecksum, checksumString + 1, 2);
-
-    int receivedChecksumValue = stringToHex((const unsigned char *) receivedChecksum);
-
-    if (calculatedChecksum != receivedChecksumValue)
-        return -EWRONG_CHECKSUM;
-
-    return EVALID;
-}
-
 static inline int8_t validateChecksumString(const unsigned char *buffer, unsigned int calculatedChecksum)
 {
     uint8_t errorCode = validateChecksumFormat(buffer);
     if (errorCode)
         return errorCode;
 
-    errorCode = validateChecksumData(buffer, calculatedChecksum);
-    if (errorCode)
-        return errorCode;
+    errorCode = compareChecksumData(buffer, calculatedChecksum);
+    if (errorCode != 0)
+        return -EWRONG_CHECKSUM;
 
     return EVALID;
 }

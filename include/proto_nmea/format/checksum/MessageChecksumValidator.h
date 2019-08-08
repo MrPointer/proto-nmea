@@ -20,6 +20,7 @@ extern "C"
 #include "proto_nmea/utility/ChecksumUtils.h"
 
 #include "ChecksumFormatValidator.h"
+#include "ChecksumValueComparator.h"
 
 #ifdef UNIT_TEST
 
