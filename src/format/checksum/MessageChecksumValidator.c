@@ -4,24 +4,6 @@
 
 #include "proto_nmea/format/checksum/MessageChecksumValidator.h"
 
-static int8_t validateChecksumFormat(const unsigned char *checksumString)
-{
-    // Should start with a checksum delimiter
-    if (checksumString[0] != PROTOCOL_CHECKSUM_DELIMITER)
-    {
-        if (strchr(((const char *) checksumString), PROTOCOL_CHECKSUM_DELIMITER))
-            return -EMISSING_CHECKSUM_DATA;
-        else
-            return -EMISSING_CHECKSUM;
-    }
-
-    // ToDo: Iterate with for loop
-    if (!isHex(checksumString[1]) || !isHex(checksumString[2]))
-        return -EINVALID_CHECKSUM;
-
-    return EVALID;
-}
-
 static int8_t validateChecksumData(const unsigned char *checksumString, unsigned int calculatedChecksum)
 {
     char receivedChecksum[3] = {0};
@@ -36,7 +18,7 @@ static int8_t validateChecksumData(const unsigned char *checksumString, unsigned
     return EVALID;
 }
 
-static int8_t validateChecksumString(const unsigned char *buffer, unsigned int calculatedChecksum)
+static inline int8_t validateChecksumString(const unsigned char *buffer, unsigned int calculatedChecksum)
 {
     uint8_t errorCode = validateChecksumFormat(buffer);
     if (errorCode)

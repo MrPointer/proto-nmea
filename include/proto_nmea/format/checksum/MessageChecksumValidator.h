@@ -19,6 +19,8 @@ extern "C"
 #include "proto_nmea/utility/StringUtils.h"
 #include "proto_nmea/utility/ChecksumUtils.h"
 
+#include "ChecksumFormatValidator.h"
+
 #ifdef UNIT_TEST
 
 int8_t validateMessageChecksum_testWrapper(const unsigned char *message, size_t messageSize);
