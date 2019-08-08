@@ -19,9 +19,13 @@ int8_t validateChecksumFormat(const unsigned char *checksumString)
             return -EMISSING_CHECKSUM;
     }
 
-    // ToDo: Iterate with for loop
-    if (!isHex(checksumString[1]) || !isHex(checksumString[2]))
-        return -EINVALID_CHECKSUM;
+    // Iterate over all data elements to validate they're representing hex values.
+    // Start from delimiter's length to skip it.
+    for (int i = CHECKSUM_DELIMITER_LENGTH; i < CHECKSUM_DATA_LENGTH; ++i)
+    {
+        if (!isHex(checksumString[i]))
+            return -EINVALID_CHECKSUM;
+    }
 
     return EVALID;
 }

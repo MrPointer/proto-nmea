@@ -15,6 +15,7 @@ int compareChecksumData(const unsigned char *checksumString, unsigned int calcul
 
     memcpy(receivedChecksum, checksumString + 1, 2);
 
+    // ToDo: Optimize by making 'stringtoHex' accept size
     unsigned int receivedChecksumValue = stringToHex((const unsigned char *) receivedChecksum);
 
     return (int) receivedChecksumValue - (int) calculatedChecksum;
