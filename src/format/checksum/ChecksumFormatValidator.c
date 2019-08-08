@@ -4,6 +4,10 @@
 
 #include "proto_nmea/format/checksum/ChecksumFormatValidator.h"
 
+#ifdef UNIT_TEST
+
+static
+#endif
 int8_t validateChecksumFormat(const unsigned char *checksumString)
 {
     // Should start with a checksum delimiter
@@ -21,3 +25,12 @@ int8_t validateChecksumFormat(const unsigned char *checksumString)
 
     return EVALID;
 }
+
+#ifdef UNIT_TEST
+
+int8_t validateChecksumFormat_testWrapper(const unsigned char *checksumString)
+{
+    return validateChecksumFormat(checksumString);
+}
+
+#endif

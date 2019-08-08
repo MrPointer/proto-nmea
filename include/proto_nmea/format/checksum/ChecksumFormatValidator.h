@@ -17,6 +17,12 @@ extern "C"
 #include "../../Errors.h"
 #include "../../utility/HexUtils.h"
 
+#ifdef UNIT_TEST
+
+int8_t validateChecksumFormat_testWrapper(const unsigned char *checksumString);
+
+#endif
+
 int8_t validateChecksumFormat(const unsigned char *checksumString);
 
 #ifdef __cplusplus

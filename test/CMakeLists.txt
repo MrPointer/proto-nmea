@@ -5,7 +5,8 @@ set(CXX_STANDARD 14)
 
 add_executable(proto-nmea-tests test_main.cpp
         format/FormatCheckerTests.cpp format/ChecksumValidatorTests.cpp
-        format/fakes/ChecksumValidatorFakes.c
+        format/fakes/ChecksumValidatorFakes.c format/fakes/ChecksumFormatValidatorFakes.c
+        format/fakes/ChecksumValueComparatorFakes.c
         utility/TypeConversionUtils.cpp)
 
 target_include_directories(proto-nmea-tests PRIVATE dependencies ../include)

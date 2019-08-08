@@ -18,6 +18,12 @@ extern "C"
 #include "../../Errors.h"
 #include "../../utility/HexUtils.h"
 
+#ifdef UNIT_TEST
+
+int compareChecksumData_testWrapper(const unsigned char *checksumString, unsigned int calculatedChecksum);
+
+#endif
+
 int compareChecksumData(const unsigned char *checksumString, unsigned int calculatedChecksum);
 
 #ifdef __cplusplus

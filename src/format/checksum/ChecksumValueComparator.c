@@ -5,6 +5,10 @@
 
 #include "proto_nmea/format/checksum/ChecksumValueComparator.h"
 
+#ifdef UNIT_TEST
+
+static
+#endif
 int compareChecksumData(const unsigned char *checksumString, unsigned int calculatedChecksum)
 {
     char receivedChecksum[3] = {0};
@@ -15,3 +19,12 @@ int compareChecksumData(const unsigned char *checksumString, unsigned int calcul
 
     return (int) receivedChecksumValue - (int) calculatedChecksum;
 }
+
+#ifdef UNIT_TEST
+
+int compareChecksumData_testWrapper(const unsigned char *checksumString, unsigned int calculatedChecksum)
+{
+    return compareChecksumData(checksumString, calculatedChecksum);
+}
+
+#endif
