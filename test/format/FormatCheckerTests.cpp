@@ -311,7 +311,7 @@ SCENARIO("Invalid message types are reported as errors")
 
             THEN("Invalid Checksum error is returned")
             {
-                REQUIRE(errorCode == -EINVALID_CHECKSUM);
+                REQUIRE(errorCode == -EUNEXPECTED_CHECKSUM_FORMAT);
             }
         }
     }

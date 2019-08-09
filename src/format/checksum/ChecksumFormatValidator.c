@@ -12,19 +12,14 @@ int8_t validateChecksumFormat(const unsigned char *checksumString)
 {
     // Should start with a checksum delimiter
     if (checksumString[0] != PROTOCOL_CHECKSUM_DELIMITER)
-    {
-        if (strchr(((const char *) checksumString), PROTOCOL_CHECKSUM_DELIMITER))
-            return -EMISSING_CHECKSUM_DATA;
-        else
-            return -EMISSING_CHECKSUM;
-    }
+        return -EMISSING_CHECKSUM;
 
     // Iterate over all data elements to validate they're representing hex values.
     // Start from delimiter's length to skip it.
-    for (int i = CHECKSUM_DELIMITER_LENGTH; i < CHECKSUM_DATA_LENGTH; ++i)
+    for (int i = CHECKSUM_DELIMITER_LENGTH; i <= CHECKSUM_DATA_LENGTH; ++i)
     {
         if (!isHex(checksumString[i]))
-            return -EINVALID_CHECKSUM;
+            return -EUNEXPECTED_CHECKSUM_FORMAT;
     }
 
     return EVALID;

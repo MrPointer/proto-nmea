@@ -61,7 +61,7 @@ SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 
         GIVEN("Invalid checksum error")
         {
-            fakeErrorCode = -EINVALID_CHECKSUM;
+            fakeErrorCode = -EUNEXPECTED_CHECKSUM_FORMAT;
             validateChecksumFormat_fake.return_val = fakeErrorCode;
 
             WHEN("Message checksum is validated")
