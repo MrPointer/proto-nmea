@@ -12,7 +12,7 @@ extern "C"
 #endif
 
 #include <fff.h>
-#include <proto_nmea/format/checksum/ChecksumValueComparator.h>
+#include <proto_nmea/etc/checksum/ChecksumValueComparator.h>
 
 DECLARE_FAKE_VALUE_FUNC(int, compareChecksumData, const unsigned char*, unsigned int)
 

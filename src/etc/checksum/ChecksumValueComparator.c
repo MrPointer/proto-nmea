@@ -3,7 +3,7 @@
 // Copyright (c) 2019 Takpit. All rights reserved.
 //
 
-#include "proto_nmea/format/checksum/ChecksumValueComparator.h"
+#include "proto_nmea/etc/checksum/ChecksumValueComparator.h"
 
 #ifdef UNIT_TEST
 

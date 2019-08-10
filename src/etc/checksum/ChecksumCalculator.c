@@ -2,7 +2,7 @@
 // Copyright (c) 2019 Takpit. All rights reserved.
 //
 
-#include "proto_nmea/utility/ChecksumUtils.h"
+#include "proto_nmea/etc/checksum/ChecksumCalculator.h"
 
 uint32_t calculateChecksum(const unsigned char *begin, const unsigned char *end)
 {

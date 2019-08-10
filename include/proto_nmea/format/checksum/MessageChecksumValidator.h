@@ -17,10 +17,10 @@ extern "C"
 #include "proto_nmea/Errors.h"
 
 #include "proto_nmea/utility/StringUtils.h"
-#include "proto_nmea/utility/ChecksumUtils.h"
+#include "proto_nmea/etc/checksum/ChecksumCalculator.h"
 
 #include "ChecksumFormatValidator.h"
-#include "ChecksumValueComparator.h"
+#include "proto_nmea/etc/checksum/ChecksumValueComparator.h"
 
 #ifdef UNIT_TEST
 
