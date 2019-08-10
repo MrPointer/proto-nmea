@@ -8,11 +8,11 @@ uint32_t calculateChecksum(const unsigned char *begin, const unsigned char *end)
 {
     uint32_t checksum = 0x00;
 
-    if (begin == NULL)
-        return -ENULL_STRING;
+    if (begin == NULL || !(*begin))
+        return 0;
 
     // ToDo: Optimize
-    if (end == NULL)
+    if (end == NULL || !(*end))
     {
         while (*begin)
             checksum ^= *begin++;
