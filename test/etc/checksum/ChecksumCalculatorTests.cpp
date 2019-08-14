@@ -10,7 +10,7 @@
 
 #include <proto_nmea/etc/checksum/ChecksumCalculator.h>
 
-SCENARIO("Checksum calculated correctly")
+SCENARIO("Checksum (XOR) calculated correctly")
 {
     GIVEN("Zero-length string")
     {
@@ -68,6 +68,47 @@ SCENARIO("Checksum calculated correctly")
                 THEN("Result is the XOR-8 of all elements in range")
                 {
                     REQUIRE(result == expectedChecksum);
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("Checksum (XOR) calculator handles invalid input")
+{
+    GIVEN("Null string")
+    {
+        WHEN("Range-based calculation is performed")
+        {
+            AND_WHEN("Beginning edge is null")
+            {
+                std::string str;
+                auto result = calculateChecksum(nullptr,
+                                                reinterpret_cast<const unsigned char *>(str.c_str()));
+
+                THEN("Result is zero")
+                {
+                    REQUIRE(result == 0);
+                }
+            }
+            AND_WHEN("Ending edge is null")
+            {
+                std::string str;
+                auto result = calculateChecksum(reinterpret_cast<const unsigned char *>(str.c_str()),
+                                                nullptr);
+
+                THEN("Result is zero")
+                {
+                    REQUIRE(result == 0);
+                }
+            }
+            AND_WHEN("Both edges are null")
+            {
+                auto result = calculateChecksum(nullptr, nullptr);
+
+                THEN("Result is zero")
+                {
+                    REQUIRE(result == 0);
                 }
             }
         }
