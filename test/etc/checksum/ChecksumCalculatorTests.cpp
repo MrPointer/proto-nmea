@@ -80,7 +80,7 @@ SCENARIO("XOR range checksum calculation handles invalid input")
         }
     }
 
-    GIVEN("Both begin & end are null")
+    GIVEN("Both begin & end strings are null")
     {
         WHEN("Checksum is calculated")
         {
@@ -96,14 +96,14 @@ SCENARIO("XOR range checksum calculation handles invalid input")
 
 SCENARIO("XOR range checksum calculated correctly")
 {
-    GIVEN("Zero-length string")
+    GIVEN("Both range edges are empty")
     {
-        std::string str;
+        std::string beginStr, endStr;
 
         WHEN("Checksum is calculated")
         {
-            auto result = calculateRangeChecksum(reinterpret_cast<const unsigned char *>(str.c_str()),
-                                                 nullptr);
+            auto result = calculateRangeChecksum(reinterpret_cast<const unsigned char *>(beginStr.c_str()),
+                                                 reinterpret_cast<const unsigned char *>(endStr.c_str()));
 
             THEN("Result is zero")
             {
@@ -162,6 +162,182 @@ SCENARIO("XOR range checksum calculated correctly")
                 {
                     REQUIRE(result == expectedChecksum);
                 }
+            }
+        }
+    }
+}
+
+SCENARIO("XOR length checksum calculation handles invalid input")
+{
+    GIVEN("Null string")
+    {
+        AND_GIVEN("Zero length")
+        {
+            std::string str;
+
+            WHEN("Checksum is calculated")
+            {
+                auto result = calculateLengthChecksum(nullptr, 0);
+
+                THEN("Result is zero")
+                {
+                    REQUIRE(result == 0);
+                }
+            }
+        }
+        AND_GIVEN("Non-zero length")
+        {
+            std::string str{"abc"};
+
+            WHEN("Checksum is calculated")
+            {
+                auto result = calculateLengthChecksum(nullptr, str.length());
+
+                THEN("Result is zero")
+                {
+                    REQUIRE(result == 0);
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("XOR length checksum calculated correctly")
+{
+    GIVEN("Zero length")
+    {
+        AND_GIVEN("Non-Empty string")
+        {
+            std::string str{"abc"};
+
+            WHEN("Checksum is calculated")
+            {
+                auto result = calculateLengthChecksum(reinterpret_cast<const unsigned char *>(str.c_str()),
+                                                      0);
+
+                THEN("Result is zero")
+                {
+                    REQUIRE(result == 0);
+                }
+            }
+        }
+        AND_GIVEN("Empty string")
+        {
+            std::string str;
+
+            WHEN("Checksum is calculated")
+            {
+                auto result = calculateLengthChecksum(reinterpret_cast<const unsigned char *>(str.c_str()),
+                                                      0);
+
+                THEN("Result is zero")
+                {
+                    REQUIRE(result == 0);
+                }
+            }
+        }
+    }
+
+    GIVEN("Some ASCII string")
+    {
+        std::string str{"abc"};
+
+        WHEN("Range consists of entire string")
+        {
+            const int expectedChecksum = 0x60; // Calculated by 'ScadaCore' - 3rd-Party calculator
+
+            AND_WHEN("Checksum is calculated")
+            {
+                auto result = calculateLengthChecksum(
+                        reinterpret_cast<const unsigned char *>(str._Unchecked_begin()),
+                        str.length());
+
+                THEN("Result is the XOR-8 of all elements in range")
+                {
+                    REQUIRE(result == expectedChecksum);
+                }
+            }
+        }
+        WHEN("Range consists of first 2 elements of the string")
+        {
+            const int expectedChecksum = 0x03; // Calculated by 'ScadaCore' - 3rd-Party calculator
+
+            AND_WHEN("Checksum is calculated")
+            {
+                auto result = calculateLengthChecksum(
+                        reinterpret_cast<const unsigned char *>(str._Unchecked_begin()),
+                        2);
+
+                THEN("Result is the XOR-8 of all elements in range")
+                {
+                    REQUIRE(result == expectedChecksum);
+                }
+            }
+        }
+        WHEN("Range consists of last 2 elements of the string")
+        {
+            const int expectedChecksum = 0x01; // Calculated by 'ScadaCore' - 3rd-Party calculator
+
+            AND_WHEN("Checksum is calculated")
+            {
+                auto result = calculateLengthChecksum(
+                        reinterpret_cast<const unsigned char *>(str._Unchecked_end() - 2),
+                        2);
+
+                THEN("Result is the XOR-8 of all elements in range")
+                {
+                    REQUIRE(result == expectedChecksum);
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("XOR full checksum calculation handles invalid input")
+{
+    GIVEN("Null string")
+    {
+        WHEN("Checksum is calculated")
+        {
+            auto result = calculateChecksum(nullptr);
+
+            THEN("Result is zero")
+            {
+                REQUIRE(result == 0);
+            }
+        }
+    }
+}
+
+SCENARIO("XOR full checksum calculated correctly")
+{
+    GIVEN("Empty string")
+    {
+        std::string str;
+
+        WHEN("Checksum is calculated")
+        {
+            auto result = calculateChecksum(reinterpret_cast<const unsigned char *>(str.c_str()));
+
+            THEN("Result is zero")
+            {
+                REQUIRE(result == 0);
+            }
+        }
+    }
+
+    GIVEN("Some ASCII string")
+    {
+        std::string str{"abc"};
+        const int expectedChecksum = 0x60; // Calculated by 'ScadaCore' - 3rd-Party calculator
+
+        AND_WHEN("Checksum is calculated")
+        {
+            auto result = calculateChecksum(reinterpret_cast<const unsigned char *>(str.c_str()));
+
+            THEN("Result is the XOR-8 of all elements in range")
+            {
+                REQUIRE(result == expectedChecksum);
             }
         }
     }
