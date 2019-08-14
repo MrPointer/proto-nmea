@@ -10,7 +10,9 @@ extern "C"
 {
 #endif
 
-#define IS_NULL_STRING(str) (str == NULL || *str == '\0')
+#define NULL_CHAR '\0'
+
+#define IS_NULL_STRING(str) (str == NULL || *str == NULL_CHAR)
 
 #ifdef __cplusplus
 }

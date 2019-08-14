@@ -8,11 +8,10 @@ uint32_t calculateRangeChecksum(const unsigned char *begin, const unsigned char 
 {
     uint32_t checksum = 0x00;
 
-    if (begin == NULL || !(*begin))
+    if (IS_NULL_STRING(begin))
         return 0;
 
-    // ToDo: Optimize
-    if (end == NULL || !(*end))
+    if (IS_NULL_STRING(end))
     {
         while (*begin)
             checksum ^= *begin++;

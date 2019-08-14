@@ -10,6 +10,7 @@ extern "C"
 {
 #endif
 
+#include "proto_nmea/utility/StringUtils.h"
 #include "proto_nmea/utility/HexUtils.h"
 
 /**
