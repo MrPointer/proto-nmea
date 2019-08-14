@@ -21,6 +21,18 @@ extern "C"
  */
 uint32_t calculateRangeChecksum(const unsigned char *begin, const unsigned char *end);
 
+#ifdef UNIT_TEST
+uint32_t calculateRangeChecksum_testWrapper(const unsigned char *begin, const unsigned char *end);
+#endif
+
+#ifdef UNIT_TEST
+uint32_t calculateLengthChecksum(const unsigned char *str, size_t length);
+uint32_t calculateLengthChecksum_testWrapper(const unsigned char *str, size_t length);
+
+uint32_t calculateChecksum(const unsigned char *str);
+uint32_t calculateChecksum_testWrapper(const unsigned char *str);
+
+#else
 /**
  * @brief Calculates checksum over the given string, taking length chars into account.
  * @param str String to calculate checksum on
@@ -37,7 +49,7 @@ inline uint32_t calculateLengthChecksum(const unsigned char *str, size_t length)
 */
 inline uint32_t calculateChecksum(const unsigned char *str)
 { return calculateRangeChecksum(str, NULL); }
-
+#endif
 
 #ifdef __cplusplus
 }
