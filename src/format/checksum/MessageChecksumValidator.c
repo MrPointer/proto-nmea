@@ -27,8 +27,8 @@ int8_t validateMessageChecksum(const unsigned char *message, size_t messageSize)
     size_t checksumDelimiterPosition = messageSize - PROTOCOL_STOP_LENGTH - CHECKSUM_FULL_LENGTH;
 
     // Calculate message's checksum
-    int calculatedChecksum = calculateChecksum(message + MESSAGE_TYPE_START_INDEX,
-                                               message + checksumDelimiterPosition);
+    int calculatedChecksum = calculateRangeChecksum(message + MESSAGE_TYPE_START_INDEX,
+                                                    message + checksumDelimiterPosition);
 
     return validateChecksumString(message + checksumDelimiterPosition, calculatedChecksum);
 }

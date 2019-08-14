@@ -18,8 +18,8 @@ SCENARIO("Checksum (XOR) calculated correctly")
 
         WHEN("Range-based calculation is performed")
         {
-            auto result = calculateChecksum(reinterpret_cast<const unsigned char *>(str.c_str()),
-                                            nullptr);
+            auto result = calculateRangeChecksum(reinterpret_cast<const unsigned char *>(str.c_str()),
+                                                 nullptr);
 
             THEN("Result is zero")
             {
@@ -37,7 +37,7 @@ SCENARIO("Checksum (XOR) calculated correctly")
             AND_WHEN("Range consists of entire string")
             {
                 const int expectedChecksum = 0x60; // Calculated by 'ScadaCore' - 3rd-Party calculator
-                auto result = calculateChecksum(
+                auto result = calculateRangeChecksum(
                         reinterpret_cast<const unsigned char *>(str._Unchecked_begin()),
                         reinterpret_cast<const unsigned char *>(str._Unchecked_end()));
 
@@ -49,7 +49,7 @@ SCENARIO("Checksum (XOR) calculated correctly")
             AND_WHEN("Range consists of first 2 elements of the string")
             {
                 const int expectedChecksum = 0x03; // Calculated by 'ScadaCore' - 3rd-Party calculator
-                auto result = calculateChecksum(
+                auto result = calculateRangeChecksum(
                         reinterpret_cast<const unsigned char *>(str._Unchecked_begin()),
                         reinterpret_cast<const unsigned char *>(str._Unchecked_begin() + 2));
 
@@ -61,7 +61,7 @@ SCENARIO("Checksum (XOR) calculated correctly")
             AND_WHEN("Range consists of last 2 elements of the string")
             {
                 const int expectedChecksum = 0x01; // Calculated by 'ScadaCore' - 3rd-Party calculator
-                auto result = calculateChecksum(
+                auto result = calculateRangeChecksum(
                         reinterpret_cast<const unsigned char *>(str._Unchecked_end() - 2),
                         reinterpret_cast<const unsigned char *>(str._Unchecked_end()));
 
@@ -82,29 +82,59 @@ SCENARIO("Checksum (XOR) calculator handles invalid input")
         {
             AND_WHEN("Beginning edge is null")
             {
-                std::string str;
-                auto result = calculateChecksum(nullptr,
-                                                reinterpret_cast<const unsigned char *>(str.c_str()));
-
-                THEN("Result is zero")
+                GIVEN("Non-Empty ending string")
                 {
-                    REQUIRE(result == 0);
+                    std::string str{"abc"};
+                    auto result = calculateRangeChecksum(nullptr,
+                                                         reinterpret_cast<const unsigned char *>(
+                                                                 str.c_str()));
+
+                    THEN("Result is zero")
+                    {
+                        REQUIRE(result == 0);
+                    }
+                }
+                GIVEN("Empty ending string")
+                {
+                    std::string str;
+                    auto result = calculateRangeChecksum(nullptr,
+                                                         reinterpret_cast<const unsigned char *>(
+                                                                 str.c_str()));
+
+                    THEN("Result is zero")
+                    {
+                        REQUIRE(result == 0);
+                    }
                 }
             }
             AND_WHEN("Ending edge is null")
             {
-                std::string str;
-                auto result = calculateChecksum(reinterpret_cast<const unsigned char *>(str.c_str()),
-                                                nullptr);
-
-                THEN("Result is zero")
+                GIVEN("Non-Empty beginning string")
                 {
-                    REQUIRE(result == 0);
+                    std::string str{"abc"};
+                    auto result = calculateRangeChecksum(reinterpret_cast<const unsigned char *>(str.c_str()),
+                                                         nullptr);
+
+                    THEN("Result is not zero")
+                    {
+                        REQUIRE(result != 0);
+                    }
+                }
+                GIVEN("Empty beginning string")
+                {
+                    std::string str;
+                    auto result = calculateRangeChecksum(reinterpret_cast<const unsigned char *>(str.c_str()),
+                                                         nullptr);
+
+                    THEN("Result is zero")
+                    {
+                        REQUIRE(result == 0);
+                    }
                 }
             }
             AND_WHEN("Both edges are null")
             {
-                auto result = calculateChecksum(nullptr, nullptr);
+                auto result = calculateRangeChecksum(nullptr, nullptr);
 
                 THEN("Result is zero")
                 {

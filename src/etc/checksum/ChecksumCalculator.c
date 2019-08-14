@@ -4,7 +4,7 @@
 
 #include "proto_nmea/etc/checksum/ChecksumCalculator.h"
 
-uint32_t calculateChecksum(const unsigned char *begin, const unsigned char *end)
+uint32_t calculateRangeChecksum(const unsigned char *begin, const unsigned char *end)
 {
     uint32_t checksum = 0x00;
 
