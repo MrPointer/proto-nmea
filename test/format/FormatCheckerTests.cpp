@@ -70,7 +70,7 @@ SCENARIO("Invalid protocol stop chars are reported as errors")
 
     GIVEN("Valid 1st stop char")
     {
-        std::string stopChars{PROTOCOL_STOP_CHAR_1};
+        std::string stopChars{PROTOCOL_FOOTER_CHAR_1};
         std::string nmeaMessage{"$GPGGA,*12"};
 
         stopChars = stopChars.append("a");
@@ -92,8 +92,8 @@ SCENARIO("Invalid message lengths are reported as errors")
 {
     GIVEN("Message shorter than minimum")
     {
-        std::string shortMessage{PROTOCOL_START_CHAR};
-        shortMessage = shortMessage.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
+        std::string shortMessage{PROTOCOL_HEADER_CHAR};
+        shortMessage = shortMessage.append(1, PROTOCOL_FOOTER_CHAR_1).append(1, PROTOCOL_FOOTER_CHAR_2);
 
         WHEN("Message format is validated")
         {
@@ -108,9 +108,9 @@ SCENARIO("Invalid message lengths are reported as errors")
 
     GIVEN("Message longer than maximum")
     {
-        std::string longMessage{PROTOCOL_START_CHAR};
+        std::string longMessage{PROTOCOL_HEADER_CHAR};
         longMessage = longMessage.append(MESSAGE_MAX_LENGTH, 'a');
-        longMessage = longMessage.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
+        longMessage = longMessage.append(1, PROTOCOL_FOOTER_CHAR_1).append(1, PROTOCOL_FOOTER_CHAR_2);
 
         WHEN("Message format is validated")
         {
@@ -126,10 +126,10 @@ SCENARIO("Invalid message lengths are reported as errors")
 
 SCENARIO("Invalid message types are reported as errors")
 {
-    std::string message{PROTOCOL_START_CHAR};
+    std::string message{PROTOCOL_HEADER_CHAR};
 
     std::string messageEndChars{};
-    messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
+    messageEndChars = messageEndChars.append(1, PROTOCOL_FOOTER_CHAR_1).append(1, PROTOCOL_FOOTER_CHAR_2);
 
     GIVEN("Message type shorter than minimum")
     {
@@ -277,10 +277,10 @@ SCENARIO("Invalid message types are reported as errors")
 
 /*SCENARIO("Invalid checksum data reported as error")
 {
-    std::string message{PROTOCOL_START_CHAR};
+    std::string message{PROTOCOL_HEADER_CHAR};
 
     std::string messageEndChars;
-    messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
+    messageEndChars = messageEndChars.append(1, PROTOCOL_FOOTER_CHAR_1).append(1, PROTOCOL_FOOTER_CHAR_2);
 
     GIVEN("Valid checksum position without checksum data")
     {
@@ -338,10 +338,10 @@ SCENARIO("Data-less messages are reported as errors")
 {
     GIVEN("Message without data")
     {
-        std::string message{PROTOCOL_START_CHAR};
+        std::string message{PROTOCOL_HEADER_CHAR};
 
         std::string nmeaMessageEnd;
-        nmeaMessageEnd = nmeaMessageEnd.append(1, PROTOCOL_STOP_CHAR_1).append(1, PROTOCOL_STOP_CHAR_2);
+        nmeaMessageEnd = nmeaMessageEnd.append(1, PROTOCOL_FOOTER_CHAR_1).append(1, PROTOCOL_FOOTER_CHAR_2);
 
         message = message.append("PGGA").append(1, PROTOCOL_FIELD_DELIMITER)
                          .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
@@ -366,11 +366,11 @@ SCENARIO("Validating format of valid messages (with mocks)", "[mock]")
         ENABLE_FFF_FAKE(validateMessageChecksum)
         validateMessageChecksum_fake.return_val = EVALID;
 
-        std::string message{PROTOCOL_START_CHAR};
+        std::string message{PROTOCOL_HEADER_CHAR};
         std::string messageEndChars;
 
-        messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1)
-                                         .append(1, PROTOCOL_STOP_CHAR_2);
+        messageEndChars = messageEndChars.append(1, PROTOCOL_FOOTER_CHAR_1)
+                                         .append(1, PROTOCOL_FOOTER_CHAR_2);
 
         message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a');
 
@@ -395,11 +395,11 @@ SCENARIO("Validating format of valid messages (with mocks)", "[mock]")
 {
     GIVEN("Valid NMEA message")
     {
-        std::string message{PROTOCOL_START_CHAR};
+        std::string message{PROTOCOL_HEADER_CHAR};
         std::string messageEndChars;
 
-        messageEndChars = messageEndChars.append(1, PROTOCOL_STOP_CHAR_1)
-                                         .append(1, PROTOCOL_STOP_CHAR_2);
+        messageEndChars = messageEndChars.append(1, PROTOCOL_FOOTER_CHAR_1)
+                                         .append(1, PROTOCOL_FOOTER_CHAR_2);
 
         message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a');
 

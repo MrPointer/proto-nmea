@@ -10,7 +10,7 @@
 #include <proto_nmea/format/checksum/MessageChecksumValidator.h>
 #include "fakes/ChecksumValidatorFakes.h"
 #include "fakes/ChecksumFormatValidatorFakes.h"
-#include "fakes/ChecksumValueComparatorFakes.h"
+#include "../etc/checksum/fakes/ChecksumValueComparatorFakes.h"
 
 SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 {

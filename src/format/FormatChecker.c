@@ -7,12 +7,12 @@
 //region Helper Macros Definitions
 
 #define VALIDATE_MESSAGE_BEGINNING_FITS_PROTOCOL(message) \
-    if (*(message) != PROTOCOL_START_CHAR) \
+    if (*(message) != PROTOCOL_HEADER_CHAR) \
         return -EINVALID_PROTOCOL_BEGINNING;
 
 #define VALIDATE_MESSAGE_ENDING_FITS_PROTOCOL(message, messageSize) \
-    if ((message)[(messageSize) - 2] != PROTOCOL_STOP_CHAR_1 || \
-        (message)[(messageSize) - 1] != PROTOCOL_STOP_CHAR_2) \
+    if ((message)[(messageSize) - 2] != PROTOCOL_FOOTER_CHAR_1 || \
+        (message)[(messageSize) - 1] != PROTOCOL_FOOTER_CHAR_2) \
             return -EINVALID_PROTOCOL_ENDING;
 
 //endregion

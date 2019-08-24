@@ -4,13 +4,14 @@
 
 #include "proto_nmea/format/checksum/MessageChecksumValidator.h"
 
-static inline int8_t validateChecksumString(const unsigned char *buffer, unsigned int calculatedChecksum)
+static int8_t validateChecksumString(const unsigned char *buffer, unsigned int calculatedChecksum)
 {
     uint8_t errorCode = validateChecksumFormat(buffer);
     if (errorCode)
         return errorCode;
 
-    errorCode = compareChecksumData(buffer, calculatedChecksum);
+    // Upon valid format, the actual checksum data has an offset of 1 relative to the given string
+    errorCode = compareChecksumData(buffer + 1, calculatedChecksum);
     if (errorCode != 0)
         return -EWRONG_CHECKSUM;
 
@@ -24,7 +25,7 @@ static
 int8_t validateMessageChecksum(const unsigned char *message, size_t messageSize)
 {
     // Find checksum delimiter index
-    size_t checksumDelimiterPosition = messageSize - PROTOCOL_STOP_LENGTH - CHECKSUM_FULL_LENGTH;
+    size_t checksumDelimiterPosition = messageSize - PROTOCOL_FOOTER_LENGTH - CHECKSUM_FULL_LENGTH;
 
     // Calculate message's checksum
     int calculatedChecksum = calculateRangeChecksum(message + MESSAGE_TYPE_START_INDEX,
