@@ -10,7 +10,7 @@ add_executable(proto-nmea-tests src/test_main.cpp
         src/format/fakes/ChecksumValidatorFakes.c src/format/fakes/ChecksumFormatValidatorFakes.c
         src/etc/checksum/fakes/ChecksumValueComparatorFakes.c
         src/etc/checksum/fakes/ChecksumXORCalculatorFakes.c
-        utility/TypeConversionUtils.cpp)
+        utility/TypeConversionUtils.cpp src/utility/HexUtilsPerfOpTests.cpp)
 
 target_include_directories(proto-nmea-tests PRIVATE dependencies ../include include utility)
 target_link_libraries(proto-nmea-tests PRIVATE proto-nmea-lib)

@@ -15,7 +15,7 @@ extern "C"
 
 #include "../ProtocolFormat.h"
 #include "../../Errors.h"
-#include "../../utility/HexUtils.h"
+#include "proto_nmea/utility/HexUtils.h"
 
 #ifdef UNIT_TEST
 

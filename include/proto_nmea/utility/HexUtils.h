@@ -2,7 +2,7 @@
 // Copyright (c) 2019 Takpit. All rights reserved.
 //
 
-#ifndef PROTO_NMEA_HEXUTILS_H
+#ifndef PROTO_NMEA_HEXUTILSPERFOP_H
 #define PROTO_NMEA_HEXUTILS_H
 
 #ifdef __cplusplus
@@ -37,4 +37,4 @@ bool isHex(unsigned char c);
 }
 #endif
 
-#endif //PROTO_NMEA_HEXUTILS_H
+#endif //PROTO_NMEA_HEXUTILSPERFOP_H
