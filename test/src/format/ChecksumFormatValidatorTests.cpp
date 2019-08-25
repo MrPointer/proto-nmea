@@ -3,13 +3,13 @@
 // Copyright (c) 2019 Takpit. All rights reserved.
 //
 
-#include "../CatchSmartInclude.hpp"
-#include "../utility/fakes/FakeUtils.h"
+#include "CatchSmartInclude.hpp"
+#include "proto_nmea_test/fakes/FakeUtils.h"
 
 #include <string>
 
 #include <proto_nmea/format/checksum/ChecksumFormatValidator.h>
-#include "fakes/ChecksumFormatValidatorFakes.h"
+#include "proto_nmea_test/fakes/format/ChecksumFormatValidatorFakes.h"
 
 SCENARIO("Validating checksum format")
 {

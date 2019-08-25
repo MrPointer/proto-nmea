@@ -4,13 +4,13 @@
 
 #include <string>
 
-#include "../CatchSmartInclude.hpp"
-#include "../utility/fakes/FakeUtils.h"
+#include "CatchSmartInclude.hpp"
+#include "proto_nmea_test/fakes/FakeUtils.h"
+#include "proto_nmea_test/fakes/format/ChecksumValidatorFakes.h"
+#include "proto_nmea_test/fakes/format/ChecksumFormatValidatorFakes.h"
+#include "proto_nmea_test/fakes/etc/checksum/ChecksumValueComparatorFakes.h"
 
 #include <proto_nmea/format/checksum/MessageChecksumValidator.h>
-#include "fakes/ChecksumValidatorFakes.h"
-#include "fakes/ChecksumFormatValidatorFakes.h"
-#include "../etc/checksum/fakes/ChecksumValueComparatorFakes.h"
 
 SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 {

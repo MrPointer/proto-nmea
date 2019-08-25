@@ -3,10 +3,10 @@
 // Copyright (c) 2019 Takpit. All rights reserved.
 //
 
-#include "../../CatchSmartInclude.hpp"
+#include "CatchSmartInclude.hpp"
 #include <fff.h>
-#include "../../utility/fakes/FakeUtils.h"
-#include "fakes/ChecksumValueComparatorFakes.h"
+#include "proto_nmea_test/fakes/FakeUtils.h"
+#include "proto_nmea_test/fakes/etc/checksum/ChecksumValueComparatorFakes.h"
 
 #include <string>
 

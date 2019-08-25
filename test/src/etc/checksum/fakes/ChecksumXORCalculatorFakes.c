@@ -3,7 +3,7 @@
 // Copyright (c) 2019 Takpit. All rights reserved.
 //
 
-#include "ChecksumXORCalculatorFakes.h"
+#include "proto_nmea_test/fakes/etc/checksum/ChecksumXORCalculatorFakes.h"
 
 DEFINE_FAKE_VALUE_FUNC(uint32_t, calculateRangeChecksum, const unsigned char *, const unsigned char *)
 

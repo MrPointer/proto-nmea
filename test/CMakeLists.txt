@@ -3,15 +3,16 @@ cmake_minimum_required(VERSION 3.8.2)
 set(C_STANDARD 11)
 set(CXX_STANDARD 14)
 
-add_executable(proto-nmea-tests test_main.cpp
-        format/FormatCheckerTests.cpp format/MessageChecksumValidatorTests.cpp
-        format/ChecksumFormatValidatorTests.cpp
-        etc/checksum/ChecksumCalculatorTests.cpp etc/checksum/ChecksumValueComparatorTests.cpp
-        format/fakes/ChecksumValidatorFakes.c format/fakes/ChecksumFormatValidatorFakes.c
-        etc/checksum/fakes/ChecksumValueComparatorFakes.c etc/checksum/fakes/ChecksumXORCalculatorFakes.c
+add_executable(proto-nmea-tests src/test_main.cpp
+        src/format/FormatCheckerTests.cpp src/format/MessageChecksumValidatorTests.cpp
+        src/format/ChecksumFormatValidatorTests.cpp
+        src/etc/checksum/ChecksumCalculatorTests.cpp src/etc/checksum/ChecksumValueComparatorTests.cpp
+        src/format/fakes/ChecksumValidatorFakes.c src/format/fakes/ChecksumFormatValidatorFakes.c
+        src/etc/checksum/fakes/ChecksumValueComparatorFakes.c
+        src/etc/checksum/fakes/ChecksumXORCalculatorFakes.c
         utility/TypeConversionUtils.cpp)
 
-target_include_directories(proto-nmea-tests PRIVATE dependencies ../include)
+target_include_directories(proto-nmea-tests PRIVATE dependencies ../include include utility)
 target_link_libraries(proto-nmea-tests PRIVATE proto-nmea-lib)
 
 # Use Catch as the testing framework

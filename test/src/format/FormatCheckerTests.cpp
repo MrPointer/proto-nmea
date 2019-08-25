@@ -4,12 +4,12 @@
 
 #include <string>
 
-#include "../CatchSmartInclude.hpp"
-#include "../utility/TypeConversionUtils.hpp"
-#include "../utility/fakes/FakeUtils.h"
+#include "CatchSmartInclude.hpp"
+#include "TypeConversionUtils.hpp"
+#include "proto_nmea_test/fakes/FakeUtils.h"
 
 #include <proto_nmea/format/FormatChecker.h>
-#include "fakes/ChecksumValidatorFakes.h"
+#include "proto_nmea_test/fakes/format/ChecksumValidatorFakes.h"
 
 SCENARIO("Null messages are reported as error")
 {
