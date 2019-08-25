@@ -14,10 +14,10 @@
 
 SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 {
+    DISABLE_FAKE(validateMessageChecksum)
+
     GIVEN("Valid checksum")
     {
-        DISABLE_FAKE(validateMessageChecksum)
-
         ENABLE_FFF_FAKE(validateChecksumFormat)
         validateChecksumFormat_fake.return_val = EVALID;
 
@@ -48,8 +48,6 @@ SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 
     GIVEN("Invalid checksum format")
     {
-        DISABLE_FAKE(validateMessageChecksum)
-
         int8_t fakeErrorCode;
 
         ENABLE_FFF_FAKE(validateChecksumFormat);
@@ -66,8 +64,9 @@ SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 
             WHEN("Message checksum is validated")
             {
-                auto result = validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
-                                                      message.size());
+                auto result =
+                        validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
+                                                message.size());
 
                 THEN("Format validator's error is returned (forwarded)")
                 {
@@ -82,8 +81,9 @@ SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 
             WHEN("Message checksum is validated")
             {
-                auto result = validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
-                                                      message.size());
+                auto result =
+                        validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
+                                                message.size());
 
                 THEN("Format validator's error is returned (forwarded)")
                 {
@@ -98,8 +98,9 @@ SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 
             WHEN("Message checksum is validated")
             {
-                auto result = validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
-                                                      message.size());
+                auto result =
+                        validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
+                                                message.size());
 
                 THEN("Format validator's error is returned (forwarded)")
                 {
@@ -111,8 +112,6 @@ SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 
     GIVEN("Wrong checksum value")
     {
-        DISABLE_FAKE(validateMessageChecksum)
-
         ENABLE_FFF_FAKE(validateChecksumFormat);
         validateChecksumFormat_fake.return_val = EVALID;
 
@@ -126,8 +125,9 @@ SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 
             WHEN("Message checksum is validated")
             {
-                auto result = validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
-                                                      message.size());
+                auto result =
+                        validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
+                                                message.size());
 
                 THEN("Wrong checksum error is returned (forwarded)")
                 {
@@ -141,8 +141,9 @@ SCENARIO("Validating message checksum (with mocks)", "[mocks]")
 
             WHEN("Message checksum is validated")
             {
-                auto result = validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
-                                                      message.size());
+                auto result =
+                        validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
+                                                message.size());
 
                 THEN("Wrong checksum error is returned (forwarded)")
                 {

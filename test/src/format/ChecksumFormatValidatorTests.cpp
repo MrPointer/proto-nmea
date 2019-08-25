@@ -13,12 +13,12 @@
 
 SCENARIO("Validating checksum format")
 {
+    DISABLE_FAKE(validateChecksumFormat)
+
     GIVEN("Invalid checksum format")
     {
         GIVEN("Unexpected delimiter position")
         {
-            DISABLE_FAKE(validateChecksumFormat)
-
             std::string checksum{"01"};
 
             WHEN("Delimiter is completely missing")
@@ -46,8 +46,6 @@ SCENARIO("Validating checksum format")
         }
         GIVEN("Non-Hex data chars")
         {
-            DISABLE_FAKE(validateChecksumFormat)
-
             std::string checksum{PROTOCOL_CHECKSUM_DELIMITER};
 
             WHEN("All chars are invalid")
@@ -88,8 +86,6 @@ SCENARIO("Validating checksum format")
 
     GIVEN("Valid checksum format")
     {
-        DISABLE_FAKE(validateChecksumFormat)
-
         std::string checksum{PROTOCOL_CHECKSUM_DELIMITER};
         checksum += "01";
 

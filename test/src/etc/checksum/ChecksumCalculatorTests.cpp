@@ -14,10 +14,10 @@
 
 SCENARIO("XOR range checksum calculation handles invalid input")
 {
+    DISABLE_FAKE(calculateRangeChecksum)
+
     GIVEN("Null begin string")
     {
-        DISABLE_FAKE(calculateRangeChecksum)
-
         AND_GIVEN("Non-Empty end string")
         {
             std::string str{"abc"};
@@ -52,8 +52,6 @@ SCENARIO("XOR range checksum calculation handles invalid input")
 
     GIVEN("Null end string")
     {
-        DISABLE_FAKE(calculateRangeChecksum)
-
         AND_GIVEN("Non-Empty begin string")
         {
             std::string str{"abc"};
@@ -88,8 +86,6 @@ SCENARIO("XOR range checksum calculation handles invalid input")
 
     GIVEN("Both begin & end strings are null")
     {
-        DISABLE_FAKE(calculateRangeChecksum)
-
         WHEN("Checksum is calculated")
         {
             auto result = calculateRangeChecksum(nullptr, nullptr);
@@ -104,10 +100,10 @@ SCENARIO("XOR range checksum calculation handles invalid input")
 
 SCENARIO("XOR range checksum calculated correctly")
 {
+    DISABLE_FAKE(calculateRangeChecksum)
+
     GIVEN("Both range edges are empty")
     {
-        DISABLE_FAKE(calculateRangeChecksum)
-
         std::string beginStr, endStr;
 
         WHEN("Checksum is calculated")
@@ -124,8 +120,6 @@ SCENARIO("XOR range checksum calculated correctly")
 
     GIVEN("Some ASCII string")
     {
-        DISABLE_FAKE(calculateRangeChecksum)
-
         std::string str{"abc"};
 
         WHEN("Range consists of entire string")
@@ -181,10 +175,10 @@ SCENARIO("XOR range checksum calculated correctly")
 
 SCENARIO("XOR length checksum calculation handles invalid input")
 {
+    DISABLE_FAKE(calculateLengthChecksum)
+
     GIVEN("Null string")
     {
-        DISABLE_FAKE(calculateLengthChecksum)
-
         AND_GIVEN("Zero length")
         {
             std::string str;
@@ -218,10 +212,10 @@ SCENARIO("XOR length checksum calculation handles invalid input")
 
 SCENARIO("XOR length checksum calculated correctly")
 {
+    DISABLE_FAKE(calculateLengthChecksum)
+
     GIVEN("Zero length")
     {
-        DISABLE_FAKE(calculateLengthChecksum)
-
         AND_GIVEN("Non-Empty string")
         {
             std::string str{"abc"};
@@ -256,8 +250,6 @@ SCENARIO("XOR length checksum calculated correctly")
 
     GIVEN("Some ASCII string")
     {
-        DISABLE_FAKE(calculateLengthChecksum)
-
         std::string str{"abc"};
 
         WHEN("Range consists of entire string")
@@ -313,10 +305,10 @@ SCENARIO("XOR length checksum calculated correctly")
 
 SCENARIO("XOR full checksum calculation handles invalid input")
 {
+    DISABLE_FAKE(calculateChecksum)
+
     GIVEN("Null string")
     {
-        DISABLE_FAKE(calculateChecksum)
-
         WHEN("Checksum is calculated")
         {
             auto result = calculateChecksum(nullptr);
@@ -331,10 +323,10 @@ SCENARIO("XOR full checksum calculation handles invalid input")
 
 SCENARIO("XOR full checksum calculated correctly")
 {
+    DISABLE_FAKE(calculateChecksum)
+
     GIVEN("Empty string")
     {
-        DISABLE_FAKE(calculateChecksum)
-
         std::string str;
 
         WHEN("Checksum is calculated")
@@ -350,8 +342,6 @@ SCENARIO("XOR full checksum calculated correctly")
 
     GIVEN("Some ASCII string")
     {
-        DISABLE_FAKE(calculateChecksum)
-
         std::string str{"abc"};
         const int expectedChecksum = 0x60; // Calculated by 'ScadaCore' - 3rd-Party calculator
 
