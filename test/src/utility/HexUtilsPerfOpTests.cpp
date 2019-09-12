@@ -7,7 +7,7 @@
 
 #include <proto_nmea/utility/HexUtils.h>
 
-SCENARIO("Hex-strings can be converted to matching integers")
+SCENARIO("Hex strings can be converted to matching integers")
 {
     GIVEN("Valid Hex-String")
     {
@@ -17,6 +17,27 @@ SCENARIO("Hex-strings can be converted to matching integers")
         WHEN("String is converted")
         {
             auto result = stringToHex(hexString);
+
+            THEN("Result is the matching hex integer")
+            {
+                REQUIRE(result == expectedInt);
+            }
+        }
+    }
+}
+
+SCENARIO("Hex substrings can be converted to matching integers")
+{
+    GIVEN("Valid Hex Substring")
+    {
+        const unsigned char string[5] = "0ab1";
+        const size_t hexStringStartIndex = 1;
+        const size_t hexStringLength = 2;
+        const uint32_t expectedInt = 0xab;
+
+        WHEN("String is converted")
+        {
+            auto result = substringToHex(string, hexStringStartIndex, hexStringLength);
 
             THEN("Result is the matching hex integer")
             {

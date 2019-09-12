@@ -41,6 +41,18 @@ uint32_t stringToHex(unsigned const char *hexString)
     return ret;
 }
 
+uint32_t substringToHex(unsigned const char *hexString, size_t startIndex, size_t length)
+{
+    uint32_t ret = 0;
+    const size_t stopIndex = startIndex + length;
+
+    for (size_t i = startIndex; i < stopIndex && hexString[i] && ret >= 0; ++i)
+    {
+        ret = (ret << 4u) | hexTable[hexString[i]];
+    }
+    return ret;
+}
+
 bool isHex(unsigned char c)
 {
     return hexTable[c] != (unsigned char) (-1);

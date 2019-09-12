@@ -14,10 +14,10 @@
 
 SCENARIO("Checksum value-comparator handles invalid input")
 {
+    DISABLE_FAKE(compareChecksumData)
+
     GIVEN("Null checksum string")
     {
-        DISABLE_FAKE(compareChecksumData)
-
         std::string checksum;
 
         WHEN("Value is compared")
@@ -35,10 +35,10 @@ SCENARIO("Checksum value-comparator handles invalid input")
 
 SCENARIO("Checksum value-comparator compares successfully")
 {
+    DISABLE_FAKE(compareChecksumData)
+
     GIVEN("Checksum string")
     {
-        DISABLE_FAKE(compareChecksumData)
-
         std::string checksum{"ab"}; // Must be 2 chars
 
         AND_GIVEN("Invalid calculated checksum value")

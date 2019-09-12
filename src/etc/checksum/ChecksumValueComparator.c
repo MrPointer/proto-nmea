@@ -14,12 +14,7 @@ int compareChecksumData(const unsigned char *checksumString, unsigned int calcul
     if (IS_NULL_STRING(checksumString))
         return -1;
 
-    char receivedChecksum[3] = {0};
-
-    memcpy(receivedChecksum, checksumString, 2);
-
-    // ToDo: Optimize by making 'stringtoHex' accept size
-    unsigned int receivedChecksumValue = stringToHex((const unsigned char *) receivedChecksum);
+    unsigned int receivedChecksumValue = substringToHex(checksumString, 0, 2);
 
     return (int) receivedChecksumValue - (int) calculatedChecksum;
 }
