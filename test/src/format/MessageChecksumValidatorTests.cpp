@@ -12,39 +12,9 @@
 
 #include <proto_nmea/format/checksum/MessageChecksumValidator.h>
 
-SCENARIO("Validating message checksum (with mocks)", "[mocks]")
+SCENARIO("Message checksum validation handles invalid input (with mocks)", "[mock]")
 {
     DISABLE_FAKE(validateMessageChecksum)
-
-    GIVEN("Valid checksum")
-    {
-        ENABLE_FFF_FAKE(validateChecksumFormat)
-        validateChecksumFormat_fake.return_val = EVALID;
-
-        ENABLE_FFF_FAKE(compareChecksumData)
-        compareChecksumData_fake.return_val = 0;
-
-        std::string message{"abc"};
-
-        WHEN("Message checksum is validated")
-        {
-            auto result = validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
-                                                  message.size());
-
-            THEN("Checksum format validator is called, and exactly once")
-            {
-                REQUIRE(validateChecksumFormat_fake.call_count == 1);
-            }
-            AND_THEN("Checksum value comparator is called, and exactly once")
-            {
-                REQUIRE(compareChecksumData_fake.call_count == 1);
-            }
-            AND_THEN("Valid result is returned")
-            {
-                REQUIRE(result == EVALID);
-            }
-        }
-    }
 
     GIVEN("Invalid checksum format")
     {
@@ -149,6 +119,41 @@ SCENARIO("Validating message checksum (with mocks)", "[mocks]")
                 {
                     REQUIRE(result == -EWRONG_CHECKSUM);
                 }
+            }
+        }
+    }
+}
+
+SCENARIO("Message checksum validated correctly (with mocks)", "[mock]")
+{
+    DISABLE_FAKE(validateMessageChecksum)
+
+    GIVEN("Valid checksum")
+    {
+        ENABLE_FFF_FAKE(validateChecksumFormat)
+        validateChecksumFormat_fake.return_val = EVALID;
+
+        ENABLE_FFF_FAKE(compareChecksumData)
+        compareChecksumData_fake.return_val = 0;
+
+        std::string message{"abc"};
+
+        WHEN("Message checksum is validated")
+        {
+            auto result = validateMessageChecksum(reinterpret_cast<const unsigned char *>(message.c_str()),
+                                                  message.size());
+
+            THEN("Checksum format validator is called, and exactly once")
+            {
+                REQUIRE(validateChecksumFormat_fake.call_count == 1);
+            }
+            AND_THEN("Checksum value comparator is called, and exactly once")
+            {
+                REQUIRE(compareChecksumData_fake.call_count == 1);
+            }
+            AND_THEN("Valid result is returned")
+            {
+                REQUIRE(result == EVALID);
             }
         }
     }

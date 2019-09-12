@@ -11,7 +11,7 @@
 #include <proto_nmea/format/FormatChecker.h>
 #include "proto_nmea_test/fakes/format/ChecksumValidatorFakes.h"
 
-SCENARIO("Null messages are reported as error")
+SCENARIO("Message format validation handles invalid input")
 {
     GIVEN("Null message")
     {
@@ -29,7 +29,7 @@ SCENARIO("Null messages are reported as error")
     }
 }
 
-SCENARIO("Invalid protocol start chars are reported errors")
+SCENARIO("Message format validation handles invalid message header/footer")
 {
     GIVEN("Invalid protocol start char")
     {
@@ -46,19 +46,30 @@ SCENARIO("Invalid protocol start chars are reported errors")
             }
         }
     }
-}
 
-SCENARIO("Invalid protocol stop chars are reported as errors")
-{
     GIVEN("Invalid protocol stop chars")
     {
-        std::string stopChars{"ab"};
         std::string message{"$GPGGA,*12"}; // ToDo: Factory?
 
-        message = message.append(stopChars);
-
-        WHEN("Message format is validated")
+        WHEN("All chars are invalid")
         {
+            std::string stopChars{"ab"};
+            message = message.append(stopChars);
+
+            int8_t errorCode = validateMessageFormat(message.c_str());
+
+            THEN("Invalid protocol ending error returned")
+            {
+                REQUIRE(errorCode == -EINVALID_PROTOCOL_ENDING);
+            }
+        }
+        AND_WHEN("1st char is valid")
+        {
+            std::string stopChars{PROTOCOL_FOOTER_CHAR_1};
+
+            stopChars = stopChars.append("a");
+            message = message.append(stopChars);
+
             int8_t errorCode = validateMessageFormat(message.c_str());
 
             THEN("Invalid protocol ending error returned")
@@ -67,28 +78,9 @@ SCENARIO("Invalid protocol stop chars are reported as errors")
             }
         }
     }
-
-    GIVEN("Valid 1st stop char")
-    {
-        std::string stopChars{PROTOCOL_FOOTER_CHAR_1};
-        std::string nmeaMessage{"$GPGGA,*12"};
-
-        stopChars = stopChars.append("a");
-        nmeaMessage = nmeaMessage.append(stopChars);
-
-        WHEN("Message format is validated")
-        {
-            int8_t errorCode = validateMessageFormat(nmeaMessage.c_str());
-
-            THEN("Invalid protocol ending error returned")
-            {
-                REQUIRE(errorCode == -EINVALID_PROTOCOL_ENDING);
-            }
-        }
-    }
 }
 
-SCENARIO("Invalid message lengths are reported as errors")
+SCENARIO("Message format validation handles invalid message lengths")
 {
     GIVEN("Message shorter than minimum")
     {
@@ -124,7 +116,7 @@ SCENARIO("Invalid message lengths are reported as errors")
     }
 }
 
-SCENARIO("Invalid message types are reported as errors")
+SCENARIO("Message format validation handles invalid message types")
 {
     std::string message{PROTOCOL_HEADER_CHAR};
 
@@ -275,6 +267,63 @@ SCENARIO("Invalid message types are reported as errors")
     }
 }
 
+SCENARIO("Message format validation handles data-less messages")
+{
+    GIVEN("Message without data")
+    {
+        std::string message{PROTOCOL_HEADER_CHAR};
+
+        std::string nmeaMessageEnd;
+        nmeaMessageEnd = nmeaMessageEnd.append(1, PROTOCOL_FOOTER_CHAR_1).append(1, PROTOCOL_FOOTER_CHAR_2);
+
+        message = message.append("PGGA").append(1, PROTOCOL_FIELD_DELIMITER)
+                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
+        message += nmeaMessageEnd;
+
+        WHEN("Message is validated")
+        {
+            int8_t errorCode = validateMessageFormat(message.c_str());
+
+            THEN("Missing Checksum Data error is returned")
+            {
+                REQUIRE(errorCode == -EMISSING_MESSAGE_DATA);
+            }
+        }
+    }
+}
+
+SCENARIO("Message format validated correctly (with mocks)", "[mock]")
+{
+    GIVEN("Valid NMEA message")
+    {
+        ENABLE_FFF_FAKE(validateMessageChecksum)
+        validateMessageChecksum_fake.return_val = EVALID;
+
+        std::string message{PROTOCOL_HEADER_CHAR};
+        std::string messageEndChars;
+
+        messageEndChars = messageEndChars.append(1, PROTOCOL_FOOTER_CHAR_1)
+                                         .append(1, PROTOCOL_FOOTER_CHAR_2);
+
+        message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a');
+
+        int messageChecksum = 0x01;
+        message = message.append(1, PROTOCOL_CHECKSUM_DELIMITER).append(intToHexString(messageChecksum));
+
+        message += messageEndChars;
+
+        WHEN("Message is validated")
+        {
+            int8_t errorCode = validateMessageFormat(message.c_str());
+
+            THEN("Valid format is returned")
+            {
+                REQUIRE(errorCode == EVALID);
+            }
+        }
+    }
+}
+
 /*SCENARIO("Invalid checksum data reported as error")
 {
     std::string message{PROTOCOL_HEADER_CHAR};
@@ -333,63 +382,6 @@ SCENARIO("Invalid message types are reported as errors")
         }
     }
 }*/
-
-SCENARIO("Data-less messages are reported as errors")
-{
-    GIVEN("Message without data")
-    {
-        std::string message{PROTOCOL_HEADER_CHAR};
-
-        std::string nmeaMessageEnd;
-        nmeaMessageEnd = nmeaMessageEnd.append(1, PROTOCOL_FOOTER_CHAR_1).append(1, PROTOCOL_FOOTER_CHAR_2);
-
-        message = message.append("PGGA").append(1, PROTOCOL_FIELD_DELIMITER)
-                         .append(1, PROTOCOL_CHECKSUM_DELIMITER).append("12");
-        message += nmeaMessageEnd;
-
-        WHEN("Message is validated")
-        {
-            int8_t errorCode = validateMessageFormat(message.c_str());
-
-            THEN("Missing Checksum Data error is returned")
-            {
-                REQUIRE(errorCode == -EMISSING_MESSAGE_DATA);
-            }
-        }
-    }
-}
-
-SCENARIO("Validating format of valid messages (with mocks)", "[mock]")
-{
-    GIVEN("Valid NMEA message")
-    {
-        ENABLE_FFF_FAKE(validateMessageChecksum)
-        validateMessageChecksum_fake.return_val = EVALID;
-
-        std::string message{PROTOCOL_HEADER_CHAR};
-        std::string messageEndChars;
-
-        messageEndChars = messageEndChars.append(1, PROTOCOL_FOOTER_CHAR_1)
-                                         .append(1, PROTOCOL_FOOTER_CHAR_2);
-
-        message = message.append("GPGGA").append(1, PROTOCOL_FIELD_DELIMITER).append(5, 'a');
-
-        int messageChecksum = 0x01;
-        message = message.append(1, PROTOCOL_CHECKSUM_DELIMITER).append(intToHexString(messageChecksum));
-
-        message += messageEndChars;
-
-        WHEN("Message is validated")
-        {
-            int8_t errorCode = validateMessageFormat(message.c_str());
-
-            THEN("Valid format is returned")
-            {
-                REQUIRE(errorCode == EVALID);
-            }
-        }
-    }
-}
 
 /*SCENARIO("Valid messages are reported as valid")
 {

@@ -11,7 +11,7 @@
 #include <proto_nmea/format/checksum/ChecksumFormatValidator.h>
 #include "proto_nmea_test/fakes/format/ChecksumFormatValidatorFakes.h"
 
-SCENARIO("Validating checksum format")
+SCENARIO("Checksum format validation handles invalid input")
 {
     DISABLE_FAKE(validateChecksumFormat)
 
@@ -23,7 +23,8 @@ SCENARIO("Validating checksum format")
 
             WHEN("Delimiter is completely missing")
             {
-                auto result = validateChecksumFormat(reinterpret_cast<const unsigned char *>(checksum.c_str()));
+                auto result =
+                        validateChecksumFormat(reinterpret_cast<const unsigned char *>(checksum.c_str()));
 
                 THEN("Missing-checksum error is returned")
                 {
@@ -36,7 +37,8 @@ SCENARIO("Validating checksum format")
                 checksum += PROTOCOL_CHECKSUM_DELIMITER;
                 checksum += "01";
 
-                auto result = validateChecksumFormat(reinterpret_cast<const unsigned char *>(checksum.c_str()));
+                auto result =
+                        validateChecksumFormat(reinterpret_cast<const unsigned char *>(checksum.c_str()));
 
                 THEN("Missing-checksum error is returned")
                 {
@@ -51,7 +53,8 @@ SCENARIO("Validating checksum format")
             WHEN("All chars are invalid")
             {
                 checksum += "xy";
-                auto result = validateChecksumFormat(reinterpret_cast<const unsigned char *>(checksum.c_str()));
+                auto result =
+                        validateChecksumFormat(reinterpret_cast<const unsigned char *>(checksum.c_str()));
 
                 THEN("Unexpected-checksum-format error is returned")
                 {
@@ -63,7 +66,8 @@ SCENARIO("Validating checksum format")
                 WHEN("1st char is invalid")
                 {
                     checksum += "x1";
-                    auto result = validateChecksumFormat(reinterpret_cast<const unsigned char *>(checksum.c_str()));
+                    auto result =
+                            validateChecksumFormat(reinterpret_cast<const unsigned char *>(checksum.c_str()));
 
                     THEN("Unexpected-checksum-format error is returned")
                     {
@@ -73,7 +77,8 @@ SCENARIO("Validating checksum format")
                 AND_WHEN("2nd char is invalid")
                 {
                     checksum += "1y";
-                    auto result = validateChecksumFormat(reinterpret_cast<const unsigned char *>(checksum.c_str()));
+                    auto result =
+                            validateChecksumFormat(reinterpret_cast<const unsigned char *>(checksum.c_str()));
 
                     THEN("Unexpected-checksum-format error is returned")
                     {
@@ -83,7 +88,10 @@ SCENARIO("Validating checksum format")
             }
         }
     }
+}
 
+SCENARIO("Checksum format validated correctly")
+{
     GIVEN("Valid checksum format")
     {
         std::string checksum{PROTOCOL_CHECKSUM_DELIMITER};
