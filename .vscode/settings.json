@@ -1,0 +1,7 @@
+{
+  "cmake.generator": "Visual Studio 16 2019",
+  "cmake.configureOnOpen": true,
+  "cmake.configureArgs": [
+    "-DUNIT_TEST=ON"
+  ]
+}
