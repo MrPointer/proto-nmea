@@ -189,4 +189,6 @@ fabric.properties
 # Ignore all local history of files
 .history
 
-# End of https://www.gitignore.io/api/c++,cmake,jetbrains,visualstudiocode
+### User-Defined ###
+# Build directories
+build/
